@@ -7,10 +7,10 @@ import numpy as np
 import random
 from itertools import permutations
 
-sys.path.insert(0, os.path.join("src", "data"))
+from data import kicktables
+from data import openerData
 
-import kicktables
-from openers import openers
+openers = openerData.openers
 
 tetris_logo = pg.image.load(os.path.join("assets", "tetris.png"))
 
