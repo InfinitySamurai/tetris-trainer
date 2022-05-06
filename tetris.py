@@ -69,91 +69,7 @@ piece_dict = {
     7: np.array([[0, 0, 0], [7, 7, 7], [0, 7, 0]]),
 }
 
-
-
-
 perms = set(permutations([1, 2, 3, 4, 5, 6, 7]))
-
-
-def Generate_DT_Cannon(perms):
-    bag1 = []
-    bag2 = []
-
-    for bag in perms:
-        if not (
-            (bag.index(1) < bag.index(3))
-            and (bag.index(1) < bag.index(4))
-            and (bag.index(7) < bag.index(3))
-            and (bag.index(7) < bag.index(4))
-        ):
-            bag1.append(bag)
-
-    for bag in perms:
-        if not ((bag.index(7) < bag.index(6)) and (bag.index(4) < bag.index(6))):
-            bag2.append(bag)
-
-    return random.choice(bag1) + random.choice(bag2)
-
-
-def Generate_Hachispin_PC(perms):
-
-    RHS = False
-
-    bags = []
-
-    for bag in perms:
-        if not (
-            (bag.index(7) < bag.index(6))
-            and (bag.index(4) < bag.index(6))
-            and ((bag.index(5) < bag.index(6)))
-        ):
-            if not (
-                (bag.index(7) < bag.index(6))
-                and (bag.index(4) < bag.index(6))
-                and ((bag.index(2) < bag.index(3)))
-            ):
-                if not (
-                    (bag.index(7) < bag.index(6))
-                    and (bag.index(5) < bag.index(6))
-                    and ((bag.index(3) < bag.index(2)))
-                ):
-                    if (bag.index(2) < bag.index(4)) and (
-                        (bag.index(2) < bag.index(5))
-                        and (
-                            (bag.index(3) < bag.index(4))
-                            and ((bag.index(3) < bag.index(5)))
-                        )
-                    ):
-                        if bag.index(4) < bag.index(5):
-                            bag1L.append(bag)
-                        else:
-                            bag1R.append(bag)
-                    else:
-                        if bag.index(2) < bag.index(3):
-                            bag1R.append(bag)
-                        else:
-                            bag1L.append(bag)
-
-
-    if random.randint(0, 1) == 1:
-        RHS = True
-        first = random.choice(bag1R)
-    else:
-        first = random.choice(bag1L)
-
-    for bag in perms:
-        if RHS:
-            if not ((bag.index(7) < bag.index(2)) and (bag.index(6) < bag.index(2))):
-                bag2.append(bag)
-        else:
-            if not ((bag.index(7) < bag.index(3)) and (bag.index(6) < bag.index(3))):
-                bag2.append(bag)
-
-    for bag in perms:
-        bag3.append(bag)
-
-    bag = first + random.choice(bag2) + random.choice(bag3)
-    return list(bag)
 
 def Generate_Bag_Constrained(perms, constraints):
     bags_list = []
@@ -199,7 +115,7 @@ def init_game():
     pg.font.init()
     pg.display.init
 
-    screen = pg.display.set_mode((screen_width, screen_height))
+    pg.display.set_mode((screen_width, screen_height))
     surf = pg.display.get_surface()
 
     surf.blit(tetris_logo, (0, 0, 50, screen_height / 2 + 25))
@@ -327,7 +243,7 @@ def spawn_previews():
     for i in range(num_previews):
         piece_array = np.flip(piece_dict[bag[i]], 0)
         preview_grid[
-            pos : pos + (np.shape(piece_array)[0]), 0 : np.shape(piece_array)[1]
+            pos: pos + (np.shape(piece_array)[0]), 0: np.shape(piece_array)[1]
         ] = piece_array
         if bag[i] == 6:
             pos += 1
@@ -590,7 +506,6 @@ def rotate(board_state, current_piece_location, direction):
     will_move = True
     current_piece_array = -piece_dict[current_piece]
     arr_h = np.shape(current_piece_array)[0]
-    arr_w = np.shape(current_piece_array)[1]
     rotated_array = np.rot90(current_piece_array, current_piece_location[2])
 
     prev_rotation_array = np.rot90(
@@ -901,7 +816,6 @@ def render_board(board_state):
 
 
 def render_ghost_piece(board_state):
-    time0 = time.time()
     surf = pg.display.get_surface()
 
     board_copy = copy.deepcopy(board_state)
@@ -962,8 +876,8 @@ def line_clear(board_state):
 
         if all(el > 0 for el in board_state[counter, :]):
             cleared_lines += 1
-            board_state[counter : board_shape[0] - 1, :] = board_state[
-                counter + 1 : board_shape[0], :
+            board_state[counter: board_shape[0] - 1, :] = board_state[
+                counter + 1: board_shape[0], :
             ]
             board_state[board_shape[0] - 1, :] = np.zeros([1, board_shape[1]])
             counter = -1
@@ -1187,7 +1101,7 @@ while play_game:
 
     if (
         (elapsed_time - (1 / frame_rate) / 2) % (1 / frame_rate) < 1 / (10 * frame_rate)
-    ) and (clock_flag == False):
+    ) and (clock_flag is False):
 
         clock_flag = True
 
@@ -1198,7 +1112,7 @@ while play_game:
         pg.display.flip()
 
     if (elapsed_time % (1 / frame_rate) < 1 / (10 * frame_rate)) and (
-        clock_flag == True
+        clock_flag is True
     ):
 
         # time0 = time.time()
