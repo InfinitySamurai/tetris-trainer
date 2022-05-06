@@ -2,6 +2,7 @@
 import game
 import os
 import pygame as pg
+import time
 from data.settings import get_game_settings
 from input import InputController, Inputs
 
@@ -22,6 +23,8 @@ game_surface = pg.display.get_surface()
 game_surface.blit(tetris_logo, (0, 0, 50, gameSettings["screen_height"] / 2 + 25))
 
 
+start_time = time.time()
+
 while True:
     pg.event.pump()
 
@@ -31,4 +34,7 @@ while True:
         exit()
 
     game.draw(game_surface)
+    # game.update()
+
+
     pg.display.flip()

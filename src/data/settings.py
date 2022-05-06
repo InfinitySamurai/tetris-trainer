@@ -16,9 +16,8 @@ gameSettings: Dict[str, float] = {
     "grid_thickness": 3,
     "preview_gap_from_main_grid": 20,
     "preview_count": 5,
+    "frames_per_second": 60
 }
-
-
 
 def get_game_settings():
     settings = gameSettings.copy()

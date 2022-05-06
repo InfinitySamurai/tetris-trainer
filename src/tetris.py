@@ -810,7 +810,7 @@ def render_board(board_state):
 
 
 def render_ghost_piece(board_state):
-    surf = pg.display.get_surface()
+    surface = pg.display.get_surface()
 
     board_copy = copy.deepcopy(board_state)
 
@@ -824,7 +824,7 @@ def render_ghost_piece(board_state):
                 colour = pg.Color(40, 40, 40, a=10)
                 if (board_copy[j, i] < 0) and (board_state[j, i] == 0):
                     draw_rect(
-                        surf,
+                        surface,
                         colour,
                         (
                             board_x_pos + i * board_width / num_cols + grid_thickness,
