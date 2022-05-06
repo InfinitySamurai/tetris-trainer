@@ -7,8 +7,6 @@ from input import InputController, Inputs
 
 gameSettings = get_game_settings()
 
-## CHECK THIS ALEX
-
 pg.init()
 pg.font.init()
 pg.display.init

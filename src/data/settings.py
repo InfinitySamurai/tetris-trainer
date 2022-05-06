@@ -12,8 +12,8 @@ gameSettings: Dict[str, float] = {
     "board_height": 700,
     "num_cols": 10,
     "num_rows": 22,
-    "cell_size": 25,
-    "grid_thickness": 2,
+    "cell_size": 30,
+    "grid_thickness": 3,
     "preview_gap_from_main_grid": 20,
     "preview_count": 5,
 }
