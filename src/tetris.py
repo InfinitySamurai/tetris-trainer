@@ -7,7 +7,7 @@ import numpy as np
 import random
 from itertools import permutations
 
-sys.path.insert(0, os.path.join("data"))
+sys.path.insert(0, os.path.join("src", "data"))
 
 import kicktables
 from openers import openers
@@ -604,12 +604,6 @@ def kick(board_state, current_piece_location, direction):
                     projected_cell_y = array_location_y - j + test[1]
                     projected_cell_x = array_location_x + i + test[0]
 
-                    # print(current_piece_location)
-                    # print(array_location_x)
-                    # print(array_location_y)
-                    # print ("projected_cell_x: ", projected_cell_x)
-                    # print ("projected_cell_y: ", projected_cell_y)
-
                     if (
                         (projected_cell_y < 0)
                         or (projected_cell_y > num_rows - 1)
@@ -647,7 +641,7 @@ def render_board(board_state):
     global flash_timer
     global game_mode
 
-    surf = pg.display.get_surface()
+    surface = pg.display.get_surface()
 
     draw_rect = pg.draw.rect
 
@@ -665,10 +659,10 @@ def render_board(board_state):
 
     # Draw game grid
     if flash_timer >= 0:
-        surf.fill((0, 0, 0))
+        surface.fill((0, 0, 0))
 
     draw_rect(
-        surf,
+        surface,
         (20, 20, 20),
         (
             board_x_pos - grid_thickness,
@@ -702,7 +696,7 @@ def render_board(board_state):
                 x = coord[1]
                 y = coord[0]
                 draw_rect(
-                    surf,
+                    surface,
                     (255, 255, 255),
                     (
                         board_x_pos + x * board_width / num_cols + grid_thickness,
@@ -721,7 +715,7 @@ def render_board(board_state):
             colour = colour_dict[abs(board_state[j, i])]
             if not (([j, i] in coords) and (colour == (0, 0, 0))):
                 draw_rect(
-                    surf,
+                    surface,
                     colour,
                     (
                         board_x_pos + i * board_width / num_cols + grid_thickness,
@@ -738,7 +732,7 @@ def render_board(board_state):
     preview_y = board_y_pos - grid_thickness
 
     draw_rect(
-        surf,
+        surface,
         (20, 20, 20),
         (
             preview_x,
@@ -757,7 +751,7 @@ def render_board(board_state):
         for j in range(preview_rows * num_previews - 5):
             colour = colour_dict[abs(preview_grid[j, i])]
             draw_rect(
-                surf,
+                surface,
                 colour,
                 (
                     preview_x + i * preview_w / preview_cols + 2 * grid_thickness,
@@ -769,7 +763,7 @@ def render_board(board_state):
 
     # Render Hold piece
     draw_rect(
-        surf,
+        surface,
         (0, 0, 0),
         (
             hold_piece_x,
@@ -789,7 +783,7 @@ def render_board(board_state):
             for j in range(hold_arr_shape[0]):
                 if hold_array[j, i] == hold_piece:
                     draw_rect(
-                        surf,
+                        surface,
                         colour,
                         (
                             hold_piece_x + i * hold_piece_w_per_cell,
@@ -810,7 +804,7 @@ def render_board(board_state):
         flash((0, 255, 0))
         flash_timer -= 1
     elif flash_timer == 0:
-        surf.blit(tetris_logo, (0, 0, 50, screen_height / 2 + 25))
+        surface.blit(tetris_logo, (0, 0, 50, screen_height / 2 + 25))
 
         flash_timer -= 1
 
