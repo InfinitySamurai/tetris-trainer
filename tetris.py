@@ -1115,8 +1115,6 @@ while play_game:
         clock_flag is True
     ):
 
-        # time0 = time.time()
-
         frame_num += 1
         clock_flag = False
 
