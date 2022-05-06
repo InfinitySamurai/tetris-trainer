@@ -14,7 +14,7 @@ gameSettings: Dict[str, float] = {
     "num_rows": 22,
     "grid_thickness": 2,
     "preview_gap_from_main_grid": 20,
-    "preview_count": 5
+    "preview_count": 5,
 }
 
 
