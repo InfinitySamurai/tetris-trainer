@@ -116,14 +116,14 @@ def init_game():
     pg.display.init
 
     pg.display.set_mode((screen_width, screen_height))
-    surf = pg.display.get_surface()
+    surface = pg.display.get_surface()
 
-    surf.blit(tetris_logo, (0, 0, 50, screen_height / 2 + 25))
+    surface.blit(tetris_logo, (0, 0, 50, screen_height / 2 + 25))
 
     # Draw game grid
 
     pg.draw.rect(
-        surf,
+        surface,
         (20, 20, 20),
         (
             board_x_pos - grid_thickness,
@@ -136,7 +136,7 @@ def init_game():
     for i in range(num_cols):
         for j in range(num_rows):
             pg.draw.rect(
-                surf,
+                surface,
                 "black",
                 (
                     board_x_pos + i * board_width / num_cols + grid_thickness,
@@ -151,7 +151,7 @@ def init_game():
     preview_y = board_y_pos - grid_thickness
 
     pg.draw.rect(
-        surf,
+        surface,
         (20, 20, 20),
         (
             preview_x,
@@ -166,7 +166,7 @@ def init_game():
     for i in range(preview_cols):
         for j in range(preview_rows * num_previews - 5):
             pg.draw.rect(
-                surf,
+                surface,
                 "black",
                 (
                     preview_x + i * preview_w / preview_cols + 2 * grid_thickness,
