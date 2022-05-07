@@ -24,19 +24,26 @@ class Tetronimo():
             self.position = next_position
 
     def check_collision(self, position: Tuple[int, int]):
-        for row in range(self.piece_data.shape[0]):
-            for col in range(self.piece_data.shape[1]):
-                cell_state = self.piece_data[row, col]
+        for tetronimo_row in range(self.piece_data.shape[0]):
+            for tetronimo_col in range(self.piece_data.shape[1]):
+                cell_state = self.piece_data[tetronimo_row, tetronimo_col]
 
                 if cell_state == 0:
                     continue 
+                
+                board_row = position[0] + tetronimo_row
+                board_col = position[1] + tetronimo_col
 
-                board_cell_state = self.board.board_state[position[0] + row, position[1] + col]
+                print(board_row)
+                if board_row > self.settings["num_rows"] - 1:
+                    return True
+                if board_col > self.settings["num_cols"] - 1 or board_col < 0:
+                    return True
+
+                board_cell_state = self.board.board_state[board_row][board_col]
                 if board_cell_state > 0:
                     return True
         return False
-                
-                
 
     def update(self):
         self.ticks_since_last_drop += 1
