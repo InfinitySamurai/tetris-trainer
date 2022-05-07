@@ -1,7 +1,6 @@
 from typing import Tuple
 import numpy as np
 
-# from data.tetronimoData import Tetronimoes, tetronimo_shapes, tetronimo_colours, Rotation, possible_rotation_count
 import data.tetronimoData as tetronimoData
 from drawUtils import draw_sqaure_at_grid
 
@@ -16,7 +15,7 @@ class Tetronimo():
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
         self.board = board
-        self.current_rotation = tetronimoData.Rotation.START
+        self.current_rotation: tetronimoData.Rotation = tetronimoData.Rotation.START
 
     def try_move(self, direction):
         next_position = (self.position[0], self.position[1] + direction)
@@ -28,13 +27,21 @@ class Tetronimo():
     # rotations is how many time to rotate counter clockwise because that's how numpy does it
     def try_rotate(self, rotations):
         next_piece_data = np.rot90(self.piece_data, rotations)
+        next_rotation = tetronimoData.Rotation((self.current_rotation.value + rotations) % tetronimoData.possible_rotation_count)
+        next_position = self.position
 
-        if not self.check_collision(self.position, next_piece_data):
-            self.piece_data = next_piece_data
-            self.lock_tick_counter = 0
-            self.current_rotation = tetronimoData.Rotation((self.current_rotation.value + rotations) % tetronimoData.possible_rotation_count)
-            return True
-        return False
+        if self.check_collision(next_position, next_piece_data):
+            for kick_data in tetronimoData.kick_table[(self.current_rotation.value, next_rotation.value)]:
+                if not self.check_collision(next_position + kick_data, next_piece_data):
+                    next_position = next_position + kick_data
+                    break
+            return False
+
+        self.piece_data = next_piece_data
+        self.position = next_position
+        self.lock_tick_counter = 0
+        self.current_rotation = next_rotation
+        return True
     
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
