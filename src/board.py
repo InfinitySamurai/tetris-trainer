@@ -1,8 +1,11 @@
+from typing import Tuple
 import pygame as pg
 import numpy as np
 
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
+from drawUtils import draw_grid, draw_sqaure_at_grid
+from tetronimo import Tetronimo
 
 class Board:
 
@@ -17,13 +20,19 @@ class Board:
         self.board_state = np.zeros([gameSettings["num_rows"], gameSettings["num_cols"]], int)
         self.preview_grid = np.zeros([self.preview_row_count * gameSettings["preview_count"], self.preview_col_count], int)
 
+        self.current_piece = Tetronimo(Tetronimoes.I, (5,5), (self.settings["board_x_pos"], self.settings["board_y_pos"]))
+
         self.board_state[0][0] = 3
         self.board_state[1][1] = 1
         self.board_state[2][4] = 6
 
+    def update(self):
+        return
+
     def draw(self, surface):
         self.draw_static(surface)
         self.draw_board_state(surface)
+        self.current_piece.draw(surface)
 
     def draw_board_state(self, surface):
         num_cols = self.settings["num_cols"]
@@ -38,16 +47,9 @@ class Board:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
-                start_position = (self.settings["board_x_pos"] + i * (self.settings["cell_size"] + self.settings["grid_thickness"]), self.settings["board_y_pos"] + j * (self.settings["cell_size"] + self.settings["grid_thickness"]))
+                start_position = (self.settings["board_x_pos"] + i * (self.settings["cell_size"] + self.settings["grid_thickness"]), self.settings["board_y_pos"] + j * (self.settings["cell_size"] + self.settings["grid_thickness"])+ self.settings["grid_thickness"])
 
-                pg.draw.rect(
-                    surface,
-                    colour,
-                    (
-                        start_position,
-                        (cell_size, cell_size)
-                    ),
-                )
+                draw_sqaure_at_grid(surface, (i, j), (self.settings["board_x_pos"], self.settings["board_y_pos"]), colour, self.settings["cell_size"], self.settings["grid_thickness"])
 
     
     def draw_static(self, surface):
@@ -65,19 +67,3 @@ class Board:
         preview_x = board_x_pos + grid_width + self.settings["preview_gap_from_main_grid"]
         draw_grid(surface, preview_x, board_y_pos, self.preview_col_count, self.preview_row_count * self.settings["preview_count"], cell_size, grid_thickness)
 
-
-def draw_grid(surface, posx: float, posy: float, num_cols: int, num_rows: int, cell_size: float, line_width: int):
-    cell_separation = cell_size + line_width
-    grid_colour = colours["grid"]
-
-    for i in range(num_cols + 1):
-        start_x = posx + i * cell_separation
-        start_pos = (start_x, posy)
-        end_pos = (start_x, posy + cell_separation * num_rows)
-        pg.draw.line(surface, grid_colour, start_pos, end_pos, line_width)
-
-    for j in range(num_rows + 1):
-        start_y = posy + j * cell_separation
-        start_pos = (posx, start_y)
-        end_pos = (posx + num_cols * cell_separation, start_y)
-        pg.draw.line(surface, grid_colour, start_pos, end_pos, line_width)
