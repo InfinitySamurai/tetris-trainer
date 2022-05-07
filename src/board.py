@@ -9,16 +9,16 @@ from input import Inputs
 from tetronimo import Tetronimo
 
 class Board:
-    def __init__(self, gameSettings):
+    def __init__(self, game_settings):
         self.width = 10
         self.height = 20
         self.preview_col_count = 4
         self.preview_row_count = 3
 
-        self.settings = gameSettings
+        self.settings = game_settings
 
-        self.board_state = np.zeros([gameSettings["num_rows"], gameSettings["num_cols"]], int)
-        self.preview_grid = np.zeros([self.preview_row_count * gameSettings["preview_count"], self.preview_col_count], int)
+        self.board_state = np.zeros([game_settings["num_rows"], game_settings["num_cols"]], int)
+        self.preview_grid = np.zeros([self.preview_row_count * game_settings["preview_count"], self.preview_col_count], int)
 
         self.current_piece = Tetronimo(self, Tetronimoes.Z, (0, 0), self.settings)
 
@@ -26,10 +26,14 @@ class Board:
         self.board_state[16][1] = 1
         self.board_state[16][4] = 6
 
-    def update(self, input_map, gravity):
-        if input_map[Inputs.MOVE_RIGHT]["frames"] == 1 or input_map[Inputs.MOVE_RIGHT]["das"]:
+    def update(self, input_map, gravity, player_settings):
+        if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
             self.current_piece.try_move(1)
-        if input_map[Inputs.MOVE_LEFT]["frames"] == 1 or input_map[Inputs.MOVE_LEFT]["das"]:
+        if input_map[Inputs.MOVE_RIGHT]["das_active"] and input_map[Inputs.MOVE_RIGHT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
+            self.current_piece.try_move(1)
+        if input_map[Inputs.MOVE_LEFT]["frames"] == 1:
+            self.current_piece.try_move(-1)
+        if  input_map[Inputs.MOVE_LEFT]["das_active"] and input_map[Inputs.MOVE_LEFT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
             self.current_piece.try_move(-1)
         if input_map[Inputs.ROTATE_CW]["frames"] == 1:
             self.current_piece.try_rotate(1)

@@ -24,7 +24,7 @@ gameSettings: Dict[str, float] = {
 # settings are in frames
 player_settings = {
     "delayed_auto_shift": 15,
-    "automatic_repeat_rate": 1,
+    "automatic_repeat_rate": 2,
     "soft_drop_factor": 20
 }
 

@@ -25,7 +25,7 @@ key_to_action_map = {
     pg.K_DOWN: Inputs.SOFT_DROP
 }
 
-das_actions = [Inputs.MOVE_LEFT, Inputs.MOVE_RIGHT]
+repeated_actions = [Inputs.MOVE_LEFT, Inputs.MOVE_RIGHT]
 
 class InputController():
     def __init__(self, player_settings):
@@ -37,8 +37,8 @@ class InputController():
             Inputs.EXIT: {"held": False, "frames": 0},
             Inputs.RESTART: {"held": False, "frames": 0},
             Inputs.HOLD: {"held": False, "frames": 0},
-            Inputs.MOVE_LEFT: {"held": False, "frames": 0, "das": False},
-            Inputs.MOVE_RIGHT: {"held": False, "frames": 0, "das": False},
+            Inputs.MOVE_LEFT: {"held": False, "frames": 0, "das_active": False},
+            Inputs.MOVE_RIGHT: {"held": False, "frames": 0, "das_active": False},
             Inputs.ROTATE_CW: {"held": False, "frames": 0},
             Inputs.ROTATE_CCW: {"held": False, "frames": 0},
             Inputs.SOFT_DROP: {"held": False, "frames": 0},
@@ -60,8 +60,8 @@ class InputController():
                 self.action_map[mapped_action]["held"] = False
                 self.action_map[mapped_action]["frames"] = 0
 
-                if mapped_action in das_actions:
-                    self.action_map[mapped_action]["das"] = False
+                if mapped_action in repeated_actions:
+                    self.action_map[mapped_action]["das_active"] = False
 
         return self.action_map
 
@@ -70,7 +70,6 @@ class InputController():
             if self.action_map[key]['held']:
                 self.action_map[key]['frames'] += 1
 
-                # Figure out if DAS if active
-                if key in das_actions:
+                if key in repeated_actions:
                     if self.action_map[key]["frames"] > self.player_settings["delayed_auto_shift"]:
-                        self.action_map[key]["das"] = True
+                        self.action_map[key]["das_active"] = True

@@ -17,4 +17,4 @@ class Game:
         if input_map[Inputs.SOFT_DROP]["held"]:
             gravity = gravity * player_settings["soft_drop_factor"]
 
-        self.board.update(input_map, gravity)
+        self.board.update(input_map, gravity, player_settings)
