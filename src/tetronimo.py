@@ -1,4 +1,5 @@
 from typing import Tuple
+import numpy as np
 
 from data.tetronimoData import Tetronimoes, tetronimo_shapes, tetronimo_colours
 from drawUtils import draw_sqaure_at_grid
@@ -15,18 +16,23 @@ class Tetronimo():
 
     def try_move(self, direction):
         next_position = (self.position[0], self.position[1] + direction)
-        if not self.check_collision(next_position):
+        if not self.check_collision(next_position, self.piece_data):
             self.position = next_position
+    
+    def try_rotate(self, direction):
+        next_piece_data = np.rot90(self.piece_data)
+        if not self.check_collision(self.position, next_piece_data):
+            self.piece_data = next_piece_data
 
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
-        if not self.check_collision(next_position):
+        if not self.check_collision(next_position, self.piece_data):
             self.position = next_position
 
-    def check_collision(self, position: Tuple[int, int]):
-        for tetronimo_row in range(self.piece_data.shape[0]):
-            for tetronimo_col in range(self.piece_data.shape[1]):
-                cell_state = self.piece_data[tetronimo_row, tetronimo_col]
+    def check_collision(self, position: Tuple[int, int], piece_data):
+        for tetronimo_row in range(piece_data.shape[0]):
+            for tetronimo_col in range(piece_data.shape[1]):
+                cell_state = piece_data[tetronimo_row, tetronimo_col]
 
                 if cell_state == 0:
                     continue 

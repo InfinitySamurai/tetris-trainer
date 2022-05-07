@@ -31,6 +31,11 @@ class Board:
             self.current_piece.try_move(1)
         if input_map[Inputs.MOVE_LEFT]:
             self.current_piece.try_move(-1)
+        if input_map[Inputs.ROTATE_CW]:
+            self.current_piece.try_rotate(1)
+        if input_map[Inputs.ROTATE_CCW]:
+            self.current_piece.try_rotate(-1)
+        
 
         self.current_piece.update()
 
