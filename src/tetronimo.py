@@ -13,6 +13,11 @@ class Tetronimo():
         self.ticks_since_last_drop = 0
         self.board = board
 
+    def try_move(self, direction):
+        next_position = (self.position[0], self.position[1] + direction)
+        if not self.check_collision(next_position):
+            self.position = next_position
+
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
         if not self.check_collision(next_position):
@@ -27,6 +32,11 @@ class Tetronimo():
                     continue 
 
                 board_cell_state = self.board.board_state[position[0] + row, position[1] + col]
+                if board_cell_state > 0:
+                    return True
+        return False
+                
+                
 
     def update(self):
         self.ticks_since_last_drop += 1

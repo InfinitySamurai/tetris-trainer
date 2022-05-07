@@ -10,8 +10,11 @@ class Inputs(Enum):
 key_to_action_map = {
     pg.K_ESCAPE: Inputs.EXIT,
     pg.K_c: Inputs.HOLD,
-    pg.K_LSHIFT: Inputs.HOLD
+    pg.K_LSHIFT: Inputs.HOLD,
+    pg.K_LEFT: Inputs.MOVE_LEFT,
+    pg.K_RIGHT: Inputs.MOVE_RIGHT
 }
+
 class InputController():
     def __init__(self):
         # disable key repeats

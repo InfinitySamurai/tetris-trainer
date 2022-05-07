@@ -10,5 +10,5 @@ class Game:
     def draw(self, surface):
         self.board.draw(surface)
 
-    def update(self):
-        self.board.update()
+    def update(self, input_map):
+        self.board.update(input_map)

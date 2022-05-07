@@ -31,7 +31,7 @@ while True:
 
     tick_manager.update()
     if tick_manager.has_ticked():
-        game.update()
+        game.update(input_map)
 
     game_surface.fill(colours["background"])
     game_surface.blit(tetris_logo, (0, 0, 50, gameSettings["screen_height"] / 2 + 25))

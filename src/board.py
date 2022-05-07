@@ -5,6 +5,7 @@ import numpy as np
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
 from drawUtils import draw_grid, draw_sqaure_at_grid
+from input import Inputs
 from tetronimo import Tetronimo
 
 class Board:
@@ -25,7 +26,12 @@ class Board:
         self.board_state[16][1] = 1
         self.board_state[16][4] = 6
 
-    def update(self):
+    def update(self, input_map):
+        if input_map[Inputs.MOVE_RIGHT]:
+            self.current_piece.try_move(1)
+        if input_map[Inputs.MOVE_LEFT]:
+            self.current_piece.try_move(-1)
+
         self.current_piece.update()
 
     def draw(self, surface):
