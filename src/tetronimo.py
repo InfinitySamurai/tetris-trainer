@@ -25,7 +25,12 @@ class Tetronimo():
         return False
     
     def try_rotate(self, direction):
-        next_piece_data = np.rot90(self.piece_data)
+        next_piece_data = self.piece_data
+        if direction == 1:
+            next_piece_data = np.rot90(self.piece_data, 3)
+        elif direction == -1:
+            next_piece_data = np.rot90(self.piece_data)
+
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data
             self.lock_tick_counter = 0
