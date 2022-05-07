@@ -18,16 +18,22 @@ class Tetronimo():
         next_position = (self.position[0], self.position[1] + direction)
         if not self.check_collision(next_position, self.piece_data):
             self.position = next_position
+            return True
+        return False
     
     def try_rotate(self, direction):
         next_piece_data = np.rot90(self.piece_data)
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data
+            return True
+        return False
 
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
         if not self.check_collision(next_position, self.piece_data):
             self.position = next_position
+            return True
+        return False
 
     def check_collision(self, position: Tuple[int, int], piece_data):
         for tetronimo_row in range(piece_data.shape[0]):
@@ -48,6 +54,7 @@ class Tetronimo():
                 board_cell_state = self.board.board_state[board_row][board_col]
                 if board_cell_state > 0:
                     return True
+
         return False
 
     def update(self, gravity):

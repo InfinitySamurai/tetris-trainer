@@ -18,7 +18,9 @@ gameSettings: Dict[str, float] = {
     "preview_gap_from_main_grid": 20,
     "preview_count": 5,
     "frames_per_second": 60,
-    "start_gravity": 0.1
+    "start_gravity": 0.05,
+    "lock_ticks": 30,
+    "lock_max_rotations": 15
 }
 
 # settings are in frames
