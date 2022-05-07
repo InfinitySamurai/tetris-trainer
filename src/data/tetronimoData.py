@@ -1,6 +1,15 @@
 from enum import Enum
 import numpy as np
 
+# Rotations are specifically in this order. CCW is a numpy 90 degree rotation
+class Rotation(Enum):
+    START = 0
+    CCW = 1
+    UPSIDEDOWN = 2
+    CW = 3
+
+possible_rotation_count = 4
+
 class Tetronimoes(Enum):
     I = 1
     S = 2

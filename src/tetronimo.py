@@ -1,24 +1,14 @@
-from enum import Enum
 from typing import Tuple
 import numpy as np
 
-from data.tetronimoData import Tetronimoes, tetronimo_shapes, tetronimo_colours
+# from data.tetronimoData import Tetronimoes, tetronimo_shapes, tetronimo_colours, Rotation, possible_rotation_count
+import data.tetronimoData as tetronimoData
 from drawUtils import draw_sqaure_at_grid
 
-# Rotations are specifically in this order. CCW is a numpy 90 degree rotation
-class Rotation(Enum):
-    START = 0
-    CCW = 1
-    UPSIDEDOWN = 2
-    CW = 3
-
-possible_rotation_count = 4
-
-
 class Tetronimo():
-    def __init__(self, board, piece_type: Tetronimoes, position: Tuple[int, int], settings):
+    def __init__(self, board, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
         self.piece = piece_type
-        self.piece_data = tetronimo_shapes[piece_type]
+        self.piece_data = tetronimoData.tetronimo_shapes[piece_type]
         self.position = position
         self.settings = settings
         self.ticks_since_last_drop = 0
@@ -26,7 +16,7 @@ class Tetronimo():
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
         self.board = board
-        self.current_rotation = Rotation.START
+        self.current_rotation = tetronimoData.Rotation.START
 
     def try_move(self, direction):
         next_position = (self.position[0], self.position[1] + direction)
@@ -42,7 +32,7 @@ class Tetronimo():
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data
             self.lock_tick_counter = 0
-            self.current_rotation = Rotation((self.current_rotation.value + rotations) % possible_rotation_count)
+            self.current_rotation = tetronimoData.Rotation((self.current_rotation.value + rotations) % tetronimoData.possible_rotation_count)
             return True
         return False
     
@@ -100,6 +90,6 @@ class Tetronimo():
                 if cell_state == 0:
                     continue
 
-                colour = tetronimo_colours[Tetronimoes(cell_state)]
+                colour = tetronimoData.tetronimo_colours[tetronimoData.Tetronimoes(cell_state)]
 
                 draw_sqaure_at_grid(surface, (self.position[0] + row, self.position[1] + col), colour, self.settings)
