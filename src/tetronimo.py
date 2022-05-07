@@ -24,12 +24,9 @@ class Tetronimo():
             return True
         return False
     
-    def try_rotate(self, direction):
-        next_piece_data = self.piece_data
-        if direction == 1:
-            next_piece_data = np.rot90(self.piece_data, 3)
-        elif direction == -1:
-            next_piece_data = np.rot90(self.piece_data)
+    # rotations is how many time to rotate counter clockwise because that's how numpy does it
+    def try_rotate(self, rotations):
+        next_piece_data = np.rot90(self.piece_data, rotations)
 
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data

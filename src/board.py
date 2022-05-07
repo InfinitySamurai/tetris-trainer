@@ -47,9 +47,11 @@ class Board:
         if  input_map[Inputs.MOVE_LEFT]["das_active"] and input_map[Inputs.MOVE_LEFT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
             self.current_tetronimo.try_move(-1)
         if input_map[Inputs.ROTATE_CW]["frames"] == 1:
-            self.current_tetronimo.try_rotate(1)
+            self.current_tetronimo.try_rotate(3)
         if input_map[Inputs.ROTATE_CCW]["frames"] == 1:
-            self.current_tetronimo.try_rotate(-1)
+            self.current_tetronimo.try_rotate(1)
+        if input_map[Inputs.ROTATE_180]["frames"] == 1:
+            self.current_tetronimo.try_rotate(2)
 
         if input_map[Inputs.HARD_DROP]["frames"] == 1:
             while self.current_tetronimo.try_drop():
