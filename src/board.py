@@ -8,7 +8,6 @@ from drawUtils import draw_grid, draw_sqaure_at_grid
 from tetronimo import Tetronimo
 
 class Board:
-
     def __init__(self, gameSettings):
         self.width = 10
         self.height = 20
@@ -20,15 +19,14 @@ class Board:
         self.board_state = np.zeros([gameSettings["num_rows"], gameSettings["num_cols"]], int)
         self.preview_grid = np.zeros([self.preview_row_count * gameSettings["preview_count"], self.preview_col_count], int)
 
-        self.current_piece = Tetronimo(Tetronimoes.I, (3, -2), self.settings)
+        self.current_piece = Tetronimo(self, Tetronimoes.I, (0, 0), self.settings)
 
-        self.board_state[0][0] = 3
-        self.board_state[1][1] = 1
-        self.board_state[2][4] = 6
+        self.board_state[15][0] = 3
+        self.board_state[16][1] = 1
+        self.board_state[16][4] = 6
 
     def update(self):
         self.current_piece.update()
-        return
 
     def draw(self, surface):
         self.draw_static(surface)
@@ -36,15 +34,15 @@ class Board:
         self.current_piece.draw(surface)
 
     def draw_board_state(self, surface):
-        for i in range(self.settings["num_cols"]):
-            for j in range(self.settings["num_rows"]):
-                cell_state = self.board_state[j, i]
+        for row in range(self.settings["num_rows"]):
+            for col in range(self.settings["num_cols"]):
+                cell_state = self.board_state[row][col]
 
                 if cell_state == 0:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
-                draw_sqaure_at_grid(surface, (i, j), colour, self.settings)
+                draw_sqaure_at_grid(surface, (row, col), colour, self.settings)
 
     
     def draw_static(self, surface):

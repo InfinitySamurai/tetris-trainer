@@ -5,8 +5,8 @@ from data.settings import colours
 
 
 def draw_sqaure_at_grid(surface, cell_pos: Tuple[int, int], colour, settings):
-    start_x = settings["board_x_pos"] + cell_pos[0] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
-    start_y = settings["board_y_pos"] + cell_pos[1] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
+    start_x = settings["board_x_pos"] + cell_pos[1] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
+    start_y = settings["board_y_pos"] + cell_pos[0] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
     start_position = (start_x, start_y)
 
     pg.draw.rect(
