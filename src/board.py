@@ -88,10 +88,10 @@ class Board:
         num_cols = self.settings["num_cols"]
 
         # Main game area
-        draw_grid(surface, board_x_pos, board_y_pos, self.settings["num_rows"], self.settings["num_cols"], self.settings )
+        draw_grid(surface, board_x_pos, board_y_pos, self.settings["num_rows"], self.settings["num_cols"], colours["grid"], self.settings )
         grid_width = (cell_size + grid_thickness) * num_cols
 
         # preview grid
         preview_x = board_x_pos + grid_width + self.settings["preview_gap_from_main_grid"]
-        draw_grid(surface, preview_x, board_y_pos, self.preview_row_count * self.settings["preview_count"], self.preview_col_count, self.settings )
+        draw_grid(surface, preview_x, board_y_pos, self.preview_row_count * self.settings["preview_count"], self.preview_col_count, colours["grid"], self.settings )
 

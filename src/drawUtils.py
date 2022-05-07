@@ -18,9 +18,8 @@ def draw_sqaure_at_grid(surface, cell_pos: Tuple[int, int], colour, settings):
         ),
     )
 
-def draw_grid(surface, posx: float, posy: float, num_rows: int, num_cols: int, settings):
+def draw_grid(surface, posx: float, posy: float, num_rows: int, num_cols: int, grid_colour, settings):
     cell_separation = settings["cell_size"] + settings["grid_thickness"]
-    grid_colour = colours["grid"]
 
     for i in range(num_cols + 1):
         start_x = posx + i * cell_separation

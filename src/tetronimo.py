@@ -4,6 +4,7 @@ import numpy as np
 import pygame as pg
 
 import data.tetronimoData as tetronimoData
+from data.settings import colours
 from drawUtils import draw_grid, draw_sqaure_at_grid
 
 class Tetronimo():
@@ -35,11 +36,17 @@ class Tetronimo():
         if self.check_collision(next_position, next_piece_data):
             kick_table = tetronimoData.kick_table_I if self.piece == tetronimoData.Tetronimoes.I else tetronimoData.kick_table
             for kick_data in kick_table[(self.current_rotation.value, next_rotation.value)]:
-                if not self.check_collision(next_position + kick_data, next_piece_data):
-                    next_position = next_position + kick_data
-                    break
+                new_position_to_check = (next_position[0] - kick_data[1], next_position[1] + kick_data[0])
+                if not self.check_collision(new_position_to_check, next_piece_data):
+                    self.do_rotation(next_piece_data, next_rotation, new_position_to_check)
+                    return True
             return False
 
+        self.do_rotation(next_piece_data, next_rotation, self.position)
+
+        return True
+
+    def do_rotation(self, next_piece_data, next_rotation, next_position):
         self.piece_data = next_piece_data
         self.position = next_position
         self.lock_tick_counter = 0
@@ -48,8 +55,6 @@ class Tetronimo():
         if self.failed_drop:
             self.rotations_since_failed_drop += 1
 
-        return True
-    
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
         if self.check_collision(next_position, self.piece_data):
@@ -116,3 +121,5 @@ class Tetronimo():
             bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * self.piece_data.shape[0]
             start_pos = (x, y)
             pg.draw.rect(surface, (0, 255, 0), (start_pos, (bounding_box_size, bounding_box_size)), 2)
+
+            draw_grid(surface, x, y, self.piece_data.shape[0], self.piece_data.shape[0], colours["debug_green"], self.settings)

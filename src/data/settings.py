@@ -2,7 +2,8 @@ from typing import Dict
 
 colours = {
     "grid": (20, 20, 20),
-    "background": (0, 0, 0)
+    "background": (0, 0, 0),
+    "debug_green": (0, 255, 0)
 }
 
 gameSettings: Dict[str, float] = {
