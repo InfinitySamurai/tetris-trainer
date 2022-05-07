@@ -21,6 +21,12 @@ gameSettings: Dict[str, float] = {
     "start_gravity": 0.1
 }
 
+# settings are in frames
+player_settings = {
+    "delayed_auto_shift": 20,
+    "automatic_repeat_rate": 1
+}
+
 def get_game_settings():
     settings = gameSettings.copy()
     settings["board_x_pos"] = gameSettings["screen_width"] / 2 - gameSettings["board_width"] / 2

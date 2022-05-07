@@ -3,7 +3,7 @@ import game
 import os
 import pygame as pg
 
-from data.settings import get_game_settings, colours
+from data.settings import get_game_settings, colours, player_settings
 from input import InputController, Inputs
 from tickManager import TickManager
 
@@ -18,7 +18,7 @@ tetris_logo = pg.image.load(os.path.join("assets", "tetris.png"))
 
 game = game.Game(gameSettings)
 
-input_controller = InputController()
+input_controller = InputController(player_settings)
 tick_manager = TickManager(gameSettings["frames_per_second"])
 
 game_surface = pg.display.get_surface()
@@ -26,11 +26,12 @@ game_surface = pg.display.get_surface()
 while True:
     pg.event.pump()
     input_map = input_controller.get_input()
-    if input_map[Inputs.EXIT] is True:
+    if input_map[Inputs.EXIT]["held"] is True:
         exit()
 
     tick_manager.update()
     if tick_manager.has_ticked():
+        input_controller.update()
         game.update(input_map)
 
     game_surface.fill(colours["background"])

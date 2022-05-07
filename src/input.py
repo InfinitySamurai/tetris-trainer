@@ -21,19 +21,22 @@ key_to_action_map = {
     pg.K_z: Inputs.ROTATE_CCW
 }
 
+das_actions = [Inputs.MOVE_LEFT, Inputs.MOVE_RIGHT]
+
 class InputController():
-    def __init__(self):
+    def __init__(self, player_settings):
         # disable key repeats
         pg.key.set_repeat()
+        self.player_settings = player_settings
 
         self.action_map = {
-            Inputs.EXIT: False,
-            Inputs.RESTART: False,
-            Inputs.HOLD: False,
-            Inputs.MOVE_LEFT: False,
-            Inputs.MOVE_RIGHT: False,
-            Inputs.ROTATE_CW: False,
-            Inputs.ROTATE_CCW: False
+            Inputs.EXIT: {"held": False, "frames": 0},
+            Inputs.RESTART: {"held": False, "frames": 0},
+            Inputs.HOLD: {"held": False, "frames": 0},
+            Inputs.MOVE_LEFT: {"held": False, "frames": 0, "das": False},
+            Inputs.MOVE_RIGHT: {"held": False, "frames": 0, "das": False},
+            Inputs.ROTATE_CW: {"held": False, "frames": 0},
+            Inputs.ROTATE_CCW: {"held": False, "frames": 0}
         }
 
     def get_input(self):
@@ -43,11 +46,25 @@ class InputController():
         for event in keydown_events:
             if event.key in key_to_action_map:
                 mapped_action = key_to_action_map[event.key]
-                self.action_map[mapped_action] = True
+                self.action_map[mapped_action]["held"] = True
         
         for event in keyup_events:
             if event.key in key_to_action_map:
                 mapped_action = key_to_action_map[event.key]
-                self.action_map[mapped_action] = False
+                self.action_map[mapped_action]["held"] = False
+                self.action_map[mapped_action]["frames"] = 0
+
+                if mapped_action in das_actions:
+                    self.action_map[mapped_action]["das"] = False
 
         return self.action_map
+
+    def update(self):
+        for key in self.action_map:
+            if self.action_map[key]['held']:
+                self.action_map[key]['frames'] += 1
+
+                # Figure out if DAS if active
+                if key in das_actions:
+                    if self.action_map[key]["frames"] > self.player_settings["delayed_auto_shift"]:
+                        self.action_map[key]["das"] = True
