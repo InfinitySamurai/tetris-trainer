@@ -16,6 +16,7 @@ class Tetronimo():
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
         self.board = board
+        self.current_rotation = 0
 
     def try_move(self, direction):
         next_position = (self.position[0], self.position[1] + direction)

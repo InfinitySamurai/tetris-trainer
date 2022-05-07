@@ -19,7 +19,7 @@ class Board:
         self.board_state = np.zeros([game_settings["num_rows"], game_settings["num_cols"]], int)
         self.preview_grid = np.zeros([self.preview_row_count * game_settings["preview_count"], self.preview_col_count], int)
 
-        self.current_tetronimo = Tetronimo(self, Tetronimoes.T, (0, 0), self.settings)
+        self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
 
     def lock_piece(self):
         tetronimo = self.current_tetronimo
@@ -35,7 +35,7 @@ class Board:
 
                 self.board_state[board_row][board_col] = tetronimo.piece.value
 
-        self.current_tetronimo = Tetronimo(self, Tetronimoes.J, (0, 0), self.settings)
+        self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
 
     def update(self, input_map, gravity, player_settings):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
