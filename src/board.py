@@ -58,7 +58,7 @@ class Board:
                 continue
             self.lock_piece()
 
-        if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"]):
+        if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"], self.settings["lock_max_rotations"]):
             self.lock_piece()
 
         self.current_tetronimo.update(gravity)

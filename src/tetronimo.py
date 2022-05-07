@@ -1,8 +1,10 @@
+from re import X
 from typing import Tuple
 import numpy as np
+import pygame as pg
 
 import data.tetronimoData as tetronimoData
-from drawUtils import draw_sqaure_at_grid
+from drawUtils import draw_grid, draw_sqaure_at_grid
 
 class Tetronimo():
     def __init__(self, board, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
@@ -31,7 +33,8 @@ class Tetronimo():
         next_position = self.position
 
         if self.check_collision(next_position, next_piece_data):
-            for kick_data in tetronimoData.kick_table[(self.current_rotation.value, next_rotation.value)]:
+            kick_table = tetronimoData.kick_table_I if self.piece == tetronimoData.Tetronimoes.I else tetronimoData.kick_table
+            for kick_data in kick_table[(self.current_rotation.value, next_rotation.value)]:
                 if not self.check_collision(next_position + kick_data, next_piece_data):
                     next_position = next_position + kick_data
                     break
@@ -41,17 +44,23 @@ class Tetronimo():
         self.position = next_position
         self.lock_tick_counter = 0
         self.current_rotation = next_rotation
+
+        if self.failed_drop:
+            self.rotations_since_failed_drop += 1
+
         return True
     
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
-        if not self.check_collision(next_position, self.piece_data):
-            self.position = next_position
-            self.failed_drop = False
-            self.lock_tick_counter = 0
-            return True
-        self.failed_drop = True
-        return False
+        if self.check_collision(next_position, self.piece_data):
+            self.failed_drop = True
+            return False
+
+        self.position = next_position
+        self.failed_drop = False
+        self.lock_tick_counter = 0
+        self.rotations_since_failed_drop = 0
+        return True
 
     def check_collision(self, position: Tuple[int, int], piece_data):
         for tetronimo_row in range(piece_data.shape[0]):
@@ -75,8 +84,8 @@ class Tetronimo():
 
         return False
 
-    def ready_to_lock(self, lock_ticks):
-        if self.lock_tick_counter > lock_ticks:
+    def ready_to_lock(self, lock_ticks, lock_max_rotations):
+        if self.lock_tick_counter > lock_ticks or self.rotations_since_failed_drop > lock_max_rotations:
             return True
         return False
 
@@ -100,3 +109,10 @@ class Tetronimo():
                 colour = tetronimoData.tetronimo_colours[tetronimoData.Tetronimoes(cell_state)]
 
                 draw_sqaure_at_grid(surface, (self.position[0] + row, self.position[1] + col), colour, self.settings)
+
+        if self.settings["debug"]:
+            x = self.settings["board_x_pos"] + self.position[1] * (self.settings["cell_size"] + self.settings["grid_thickness"])
+            y = self.settings["board_y_pos"] + self.position[0] * (self.settings["cell_size"] + self.settings["grid_thickness"])
+            bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * self.piece_data.shape[0]
+            start_pos = (x, y)
+            pg.draw.rect(surface, (0, 255, 0), (start_pos, (bounding_box_size, bounding_box_size)), 2)

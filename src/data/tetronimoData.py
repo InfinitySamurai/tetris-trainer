@@ -47,11 +47,11 @@ kick_table_I = {
     (Rotation.UPSIDEDOWN.value, Rotation.CCW.value): [(2,0),(-1,0),(2,1),(-1,-2)],
     (Rotation.CCW.value, Rotation.UPSIDEDOWN.value): [(-2,0),(1,0),(-2,-1),(1,2)],
     (Rotation.CCW.value, Rotation.START.value): [(1,0),(-2,0),(1,-2),(-2,1)],
-    (Rotation.START.value, Rotation.CCW.value): [(-1,0),(2,0),(-1,2),(2,-1)]
-    # "0>>2": [[0,1],[1,1],[-1,1],[1,0],[-1,0]],
-    # "2>>0": [[0,-1],[-1,-1],[1,-1],[-1,0],[1,0]],
-    # "1>>3": [[1,0],[1,2],[1,1],[0,2],[0,1]],
-    # "3>>1": [[-1,0],[-1,2],[-1,1],[0,2],[0,1]]
+    (Rotation.START.value, Rotation.CCW.value): [(-1,0),(2,0),(-1,2),(2,-1)],
+    # (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
+    # (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
+    # (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
+    # (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
 }
 
 kick_table = {
@@ -62,9 +62,9 @@ kick_table = {
     (Rotation.UPSIDEDOWN.value, Rotation.CCW.value): [(1,0),(1,1),(0,-2),(1,-2)],
     (Rotation.CCW.value, Rotation.UPSIDEDOWN.value): [(-1,0),(-1,-1),(0,2),(-1,2)],
     (Rotation.CCW.value, Rotation.START.value): [(-1,0),(-1,-1),(0,2),(-1,2)],
-    (Rotation.START.value, Rotation.CCW.value): [(1,0),(1,1),(0,-2),(1,-2)]
-    # "0>>2": [[0,1],[1,1],[-1,1],[1,0],[-1,0]],
-    # "2>>0": [[0,-1],[-1,-1],[1,-1],[-1,0],[1,0]],
-    # "1>>3": [[1,0],[1,2],[1,1],[0,2],[0,1]],
-    # "3>>1": [[-1,0],[-1,2],[-1,1],[0,2],[0,1]]
+    (Rotation.START.value, Rotation.CCW.value): [(1,0),(1,1),(0,-2),(1,-2)],
+    # (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
+    # (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
+    # (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
+    # (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
 }

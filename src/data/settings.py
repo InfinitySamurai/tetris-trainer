@@ -6,6 +6,7 @@ colours = {
 }
 
 gameSettings: Dict[str, float] = {
+    "debug": True,
     "screen_width": 1000,
     "screen_height": 800,
     "board_y_pos": 50,
@@ -19,7 +20,7 @@ gameSettings: Dict[str, float] = {
     "preview_count": 5,
     "frames_per_second": 60,
     "start_gravity": 0.05,
-    "lock_ticks": 30,
+    "lock_ticks": 120,
     "lock_max_rotations": 15
 }
 
