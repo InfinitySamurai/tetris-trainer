@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Tuple, Dict
 import numpy as np
 
 # Rotations are specifically in this order. CCW is a numpy 90 degree rotation
@@ -39,7 +40,10 @@ tetronimo_shapes = {
     Tetronimoes.T: np.array([[0, Tetronimoes.T.value, 0], [Tetronimoes.T.value, Tetronimoes.T.value, Tetronimoes.T.value], [0, 0, 0]]),
 }
 
-kick_table_I = {
+Kicktable = Dict[Tuple[int, int], list[Tuple[int, int]]]
+
+# kick tables are (x, y) where positive x is right and positive y is up
+kick_table_I: Kicktable = {
     (Rotation.START.value, Rotation.CW.value): [(-2,0),(1,0),(-2,-1),(1,2)],
     (Rotation.CW.value, Rotation.START.value): [(2,0),(-1,0),(2,1),(-1,-2)],
     (Rotation.CW.value, Rotation.UPSIDEDOWN.value): [(-1,0),(2,0),(-1,2),(2,-1)],
@@ -54,7 +58,7 @@ kick_table_I = {
     # (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
 }
 
-kick_table = {
+kick_table: Kicktable = {
     (Rotation.START.value, Rotation.CW.value): [(-1,0),(-1,1),(0,-2),(-1,-2)],
     (Rotation.CW.value, Rotation.START.value): [(1,0),(1,-1),(0,2),(1,2)],
     (Rotation.CW.value, Rotation.UPSIDEDOWN.value): [(1,0),(1,-1),(0,2),(1,2)],
