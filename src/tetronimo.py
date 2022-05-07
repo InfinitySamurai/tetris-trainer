@@ -5,13 +5,22 @@ from drawUtils import draw_sqaure_at_grid
 
 
 class Tetronimo():
-    def __init__(self, piece_type: Tetronimoes, position: Tuple[int, int], board_pos: Tuple[int, int], cell_size, grid_thickness):
+    def __init__(self, piece_type: Tetronimoes, position: Tuple[int, int], settings):
         self.piece = piece_type
         self.piece_data = tetronimo_shapes[piece_type]
         self.position = position
-        self.board_pos = board_pos
-        self.cell_size = cell_size
-        self.grid_thickness = grid_thickness
+        self.settings = settings
+        self.frames_since_last_drop = 0
+
+    def try_drop(self):
+        self.position = (self.position[0], self.position[1] + 1)
+
+    def update(self):
+        self.frames_since_last_drop += 1
+        if self.frames_since_last_drop * self.settings['start_gravity'] >= 1:
+            self.frames_since_last_drop = 0
+            self.try_drop()
+            
 
     def draw(self, surface):
         for i in range(self.piece_data.shape[0]):
@@ -23,4 +32,4 @@ class Tetronimo():
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
 
-                draw_sqaure_at_grid(surface, (i, j), (self.board_pos[0], self.board_pos[1]), colour, self.cell_size, self.grid_thickness)
+                draw_sqaure_at_grid(surface, (self.position[0] + i, self.position[1] + j), colour, self.settings)
