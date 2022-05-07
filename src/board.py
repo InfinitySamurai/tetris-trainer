@@ -20,7 +20,7 @@ class Board:
         self.board_state = np.zeros([gameSettings["num_rows"], gameSettings["num_cols"]], int)
         self.preview_grid = np.zeros([self.preview_row_count * gameSettings["preview_count"], self.preview_col_count], int)
 
-        self.current_piece = Tetronimo(Tetronimoes.I, (5,5), (self.settings["board_x_pos"], self.settings["board_y_pos"]))
+        # self.current_piece = Tetronimo(Tetronimoes.I, (5,5), (self.settings["board_x_pos"], self.settings["board_y_pos"]))
 
         self.board_state[0][0] = 3
         self.board_state[1][1] = 1
@@ -32,7 +32,7 @@ class Board:
     def draw(self, surface):
         self.draw_static(surface)
         self.draw_board_state(surface)
-        self.current_piece.draw(surface)
+        # self.current_piece.draw(surface)
 
     def draw_board_state(self, surface):
         num_cols = self.settings["num_cols"]
@@ -47,9 +47,7 @@ class Board:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
-                start_position = (self.settings["board_x_pos"] + i * (self.settings["cell_size"] + self.settings["grid_thickness"]), self.settings["board_y_pos"] + j * (self.settings["cell_size"] + self.settings["grid_thickness"])+ self.settings["grid_thickness"])
-
-                draw_sqaure_at_grid(surface, (i, j), (self.settings["board_x_pos"], self.settings["board_y_pos"]), colour, self.settings["cell_size"], self.settings["grid_thickness"])
+                draw_sqaure_at_grid(surface, (i, j), colour, self.settings)
 
     
     def draw_static(self, surface):
@@ -60,10 +58,10 @@ class Board:
         num_cols = self.settings["num_cols"]
 
         # Main game area
-        draw_grid(surface, board_x_pos, board_y_pos, num_cols, self.settings["num_rows"], cell_size,  grid_thickness )
+        draw_grid(surface, self.settings )
         grid_width = (cell_size + grid_thickness) * num_cols
 
         # preview grid
         preview_x = board_x_pos + grid_width + self.settings["preview_gap_from_main_grid"]
-        draw_grid(surface, preview_x, board_y_pos, self.preview_col_count, self.preview_row_count * self.settings["preview_count"], cell_size, grid_thickness)
+        draw_grid(surface, self.settings)
 
