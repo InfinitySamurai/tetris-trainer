@@ -5,7 +5,7 @@ import pygame as pg
 
 import data.tetronimoData as tetronimoData
 from data.settings import colours
-from drawUtils import draw_grid, draw_sqaure_at_grid
+from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
 
 class Tetronimo():
     def __init__(self, board, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
@@ -116,10 +116,8 @@ class Tetronimo():
                 draw_sqaure_at_grid(surface, (self.position[0] + row, self.position[1] + col), colour, self.settings)
 
         if self.settings["debug"]:
-            x = self.settings["board_x_pos"] + self.position[1] * (self.settings["cell_size"] + self.settings["grid_thickness"])
-            y = self.settings["board_y_pos"] + self.position[0] * (self.settings["cell_size"] + self.settings["grid_thickness"])
             bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * self.piece_data.shape[0]
-            start_pos = (x, y)
+            start_pos = cell_to_world_coords(self.position, self.settings)
             pg.draw.rect(surface, (0, 255, 0), (start_pos, (bounding_box_size, bounding_box_size)), 2)
 
-            draw_grid(surface, x, y, self.piece_data.shape[0], self.piece_data.shape[0], colours["debug_green"], self.settings)
+            draw_grid(surface, start_pos[0], start_pos[1], self.piece_data.shape[0], self.piece_data.shape[0], colours["debug_green"], self.settings)

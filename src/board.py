@@ -1,9 +1,10 @@
 import random
 import numpy as np
+import pygame as pg
 
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
-from drawUtils import draw_grid, draw_sqaure_at_grid
+from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
 from input import Inputs
 from tetronimo import Tetronimo
 
@@ -14,10 +15,12 @@ class Board:
         self.preview_col_count = 4
         self.preview_row_count = 3
 
+        self.font = pg.font.SysFont("comic sans", 14)
+
         self.settings = game_settings
 
-        self.board_state = np.zeros([game_settings["num_rows"], game_settings["num_cols"]], int)
-        self.preview_grid = np.zeros([self.preview_row_count * game_settings["preview_count"], self.preview_col_count], int)
+        self.board_state = np.zeros([game_settings["num_rows"], game_settings["num_cols"]], np.int8)
+        self.preview_grid = np.zeros([self.preview_row_count * game_settings["preview_count"], self.preview_col_count], np.int8)
 
         self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
 
@@ -35,7 +38,24 @@ class Board:
 
                 self.board_state[board_row][board_col] = tetronimo.piece.value
 
+        self.clear_complete_lines()
         self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
+
+    def clear_complete_lines(self):
+        for row_number, row_data in enumerate(self.board_state):
+            if np.count_nonzero(row_data) == self.settings["num_cols"]:
+                np.delete(self.board_state, 1, 0)
+                self.board_state[row_number] = [0,0,0,0,0,0,0,0,0,0]
+        # tetronimo_size = tetronimo.piece_data.shape[0]
+        # tetronimo_position = tetronimo.position
+        # for i in range(tetronimo_size):
+        #     row_number = tetronimo_position[1] + i
+        #     row_data = self.board_state[row_number]
+
+        #     if np.count_nonzero(row_data) == self.settings["num_cols"]:
+        #         self.board_state[row_number] = [0,0,0,0,0,0,0,0,0,0]
+        #         return
+        # return
 
     def update(self, input_map, gravity, player_settings):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
@@ -68,16 +88,24 @@ class Board:
         self.draw_board_state(surface)
         self.current_tetronimo.draw(surface)
 
-    def draw_board_state(self, surface):
+    def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
             for col in range(self.settings["num_cols"]):
                 cell_state = self.board_state[row][col]
+
+                if self.settings["debug"]:
+                    arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
+                    pos = cell_to_world_coords((row, col), self.settings)
+                    surface.blit(arr_text, pos)
 
                 if cell_state == 0:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
                 draw_sqaure_at_grid(surface, (row, col), colour, self.settings)
+
+
+
 
     
     def draw_static(self, surface):
