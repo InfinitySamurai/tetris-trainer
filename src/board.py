@@ -21,10 +21,6 @@ class Board:
 
         self.current_tetronimo = Tetronimo(self, Tetronimoes.L, (0, 0), self.settings)
 
-        self.board_state[15][0] = 3
-        self.board_state[16][1] = 1
-        self.board_state[16][4] = 6
-
     def lock_piece(self):
         tetronimo = self.current_tetronimo
         for tetronimo_row in range(tetronimo.piece_data.shape[0]):
@@ -58,6 +54,9 @@ class Board:
         if input_map[Inputs.HARD_DROP]["frames"] == 1:
             while self.current_tetronimo.try_drop():
                 continue
+            self.lock_piece()
+
+        if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"]):
             self.lock_piece()
 
         self.current_tetronimo.update(gravity)

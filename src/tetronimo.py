@@ -12,6 +12,9 @@ class Tetronimo():
         self.position = position
         self.settings = settings
         self.ticks_since_last_drop = 0
+        self.failed_drop = False
+        self.lock_tick_counter = 0
+        self.rotations_since_failed_drop = 0
         self.board = board
 
     def try_move(self, direction):
@@ -25,6 +28,7 @@ class Tetronimo():
         next_piece_data = np.rot90(self.piece_data)
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data
+            self.lock_tick_counter = 0
             return True
         return False
 
@@ -32,7 +36,10 @@ class Tetronimo():
         next_position = (self.position[0] + 1, self.position[1])
         if not self.check_collision(next_position, self.piece_data):
             self.position = next_position
+            self.failed_drop = False
+            self.lock_tick_counter = 0
             return True
+        self.failed_drop = True
         return False
 
     def check_collision(self, position: Tuple[int, int], piece_data):
@@ -57,8 +64,15 @@ class Tetronimo():
 
         return False
 
+    def ready_to_lock(self, lock_ticks):
+        if self.lock_tick_counter > lock_ticks:
+            return True
+        return False
+
     def update(self, gravity):
         self.ticks_since_last_drop += 1
+        if self.failed_drop:
+            self.lock_tick_counter += 1
         if self.ticks_since_last_drop * gravity >= 1:
             self.ticks_since_last_drop = 0
             self.try_drop()
