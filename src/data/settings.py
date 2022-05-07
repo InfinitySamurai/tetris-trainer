@@ -23,8 +23,9 @@ gameSettings: Dict[str, float] = {
 
 # settings are in frames
 player_settings = {
-    "delayed_auto_shift": 20,
-    "automatic_repeat_rate": 1
+    "delayed_auto_shift": 15,
+    "automatic_repeat_rate": 1,
+    "soft_drop_factor": 20
 }
 
 def get_game_settings():

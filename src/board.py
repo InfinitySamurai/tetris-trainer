@@ -26,7 +26,7 @@ class Board:
         self.board_state[16][1] = 1
         self.board_state[16][4] = 6
 
-    def update(self, input_map):
+    def update(self, input_map, gravity):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1 or input_map[Inputs.MOVE_RIGHT]["das"]:
             self.current_piece.try_move(1)
         if input_map[Inputs.MOVE_LEFT]["frames"] == 1 or input_map[Inputs.MOVE_LEFT]["das"]:
@@ -35,9 +35,8 @@ class Board:
             self.current_piece.try_rotate(1)
         if input_map[Inputs.ROTATE_CCW]["frames"] == 1:
             self.current_piece.try_rotate(-1)
-        
 
-        self.current_piece.update()
+        self.current_piece.update(gravity)
 
     def draw(self, surface):
         self.draw_static(surface)

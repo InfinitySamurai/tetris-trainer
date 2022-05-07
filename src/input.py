@@ -9,6 +9,8 @@ class Inputs(Enum):
     MOVE_RIGHT = auto()
     ROTATE_CW = auto()
     ROTATE_CCW = auto()
+    SOFT_DROP = auto()
+    HARD_DROP = auto()
 
 key_to_action_map = {
     pg.K_ESCAPE: Inputs.EXIT,
@@ -18,7 +20,9 @@ key_to_action_map = {
     pg.K_LEFT: Inputs.MOVE_LEFT,
     pg.K_RIGHT: Inputs.MOVE_RIGHT,
     pg.K_x: Inputs.ROTATE_CW,
-    pg.K_z: Inputs.ROTATE_CCW
+    pg.K_z: Inputs.ROTATE_CCW,
+    pg.K_SPACE: Inputs.HARD_DROP,
+    pg.K_DOWN: Inputs.SOFT_DROP
 }
 
 das_actions = [Inputs.MOVE_LEFT, Inputs.MOVE_RIGHT]
@@ -36,7 +40,9 @@ class InputController():
             Inputs.MOVE_LEFT: {"held": False, "frames": 0, "das": False},
             Inputs.MOVE_RIGHT: {"held": False, "frames": 0, "das": False},
             Inputs.ROTATE_CW: {"held": False, "frames": 0},
-            Inputs.ROTATE_CCW: {"held": False, "frames": 0}
+            Inputs.ROTATE_CCW: {"held": False, "frames": 0},
+            Inputs.SOFT_DROP: {"held": False, "frames": 0},
+            Inputs.HARD_DROP: {"held": False, "frames": 0},
         }
 
     def get_input(self):

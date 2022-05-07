@@ -50,9 +50,9 @@ class Tetronimo():
                     return True
         return False
 
-    def update(self):
+    def update(self, gravity):
         self.ticks_since_last_drop += 1
-        if self.ticks_since_last_drop * self.settings['start_gravity'] >= 1:
+        if self.ticks_since_last_drop * gravity >= 1:
             self.ticks_since_last_drop = 0
             self.try_drop()
             
