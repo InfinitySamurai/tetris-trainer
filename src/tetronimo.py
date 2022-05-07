@@ -1,8 +1,18 @@
+from enum import Enum
 from typing import Tuple
 import numpy as np
 
 from data.tetronimoData import Tetronimoes, tetronimo_shapes, tetronimo_colours
 from drawUtils import draw_sqaure_at_grid
+
+# Rotations are specifically in this order. CCW is a numpy 90 degree rotation
+class Rotation(Enum):
+    START = 0
+    CCW = 1
+    UPSIDEDOWN = 2
+    CW = 3
+
+possible_rotation_count = 4
 
 
 class Tetronimo():
@@ -16,7 +26,7 @@ class Tetronimo():
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
         self.board = board
-        self.current_rotation = 0
+        self.current_rotation = Rotation.START
 
     def try_move(self, direction):
         next_position = (self.position[0], self.position[1] + direction)
@@ -32,9 +42,10 @@ class Tetronimo():
         if not self.check_collision(self.position, next_piece_data):
             self.piece_data = next_piece_data
             self.lock_tick_counter = 0
+            self.current_rotation = Rotation((self.current_rotation.value + rotations) % possible_rotation_count)
             return True
         return False
-
+    
     def try_drop(self):
         next_position = (self.position[0] + 1, self.position[1])
         if not self.check_collision(next_position, self.piece_data):
