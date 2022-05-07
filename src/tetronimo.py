@@ -34,7 +34,6 @@ class Tetronimo():
                 board_row = position[0] + tetronimo_row
                 board_col = position[1] + tetronimo_col
 
-                print(board_row)
                 if board_row > self.settings["num_rows"] - 1:
                     return True
                 if board_col > self.settings["num_cols"] - 1 or board_col < 0:

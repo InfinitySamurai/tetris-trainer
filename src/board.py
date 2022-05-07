@@ -20,7 +20,7 @@ class Board:
         self.board_state = np.zeros([gameSettings["num_rows"], gameSettings["num_cols"]], int)
         self.preview_grid = np.zeros([self.preview_row_count * gameSettings["preview_count"], self.preview_col_count], int)
 
-        self.current_piece = Tetronimo(self, Tetronimoes.I, (0, 0), self.settings)
+        self.current_piece = Tetronimo(self, Tetronimoes.Z, (0, 0), self.settings)
 
         self.board_state[15][0] = 3
         self.board_state[16][1] = 1
