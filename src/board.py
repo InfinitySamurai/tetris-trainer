@@ -73,6 +73,8 @@ class Board:
             if self.has_swapped_tetronimo:
                 return
             
+            self.has_swapped_tetronimo = True
+
             if self.held_tetronimo is None:
                 self.held_tetronimo = self.current_tetronimo
                 self.current_tetronimo = self.bagManager.fetch_piece()
@@ -95,9 +97,9 @@ class Board:
         self.preview.draw(surface, self.bagManager.peek_next_pieces(self.settings["preview_count"]))
 
     def draw_held_piece(self, surface):
-        help_tetronimo = self.held_tetronimo
-        if help_tetronimo is not None:
-            help_tetronimo.draw_piece(surface, (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]), help_tetronimo.piece_data, (0 ,0))
+        held_tetronimo = self.held_tetronimo
+        if held_tetronimo is not None:
+            held_tetronimo.draw_piece(surface, (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]), held_tetronimo.piece_data, (0 ,0))
 
     def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
