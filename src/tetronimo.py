@@ -1,4 +1,4 @@
-from re import X
+import copy
 from typing import Tuple
 import numpy as np
 import pygame as pg
@@ -102,21 +102,34 @@ class Tetronimo():
             self.try_drop(board)
             
 
-    def draw(self, surface):
-        for row in range(self.piece_data.shape[0]):
-            for col in range(self.piece_data.shape[1]):
-                cell_state = self.piece_data[row][col]
+    def draw(self, board, surface):
+        self.draw_piece(surface, self.piece_data, self.position)
+        self.draw_ghost(board, surface)
+
+    def draw_piece(self, surface, piece_data, position, alpha = 255):
+        for row in range(piece_data.shape[0]):
+            for col in range(piece_data.shape[1]):
+                cell_state = piece_data[row][col]
 
                 if cell_state == 0:
                     continue
 
                 colour = tetronimoData.tetronimo_colours[tetronimoData.Tetronimoes(cell_state)]
+                colour_with_alpha = (*colour, alpha)
 
-                draw_sqaure_at_grid(surface, (self.position[0] + row, self.position[1] + col), colour, self.settings)
+                draw_sqaure_at_grid(surface, (position[0] + row, position[1] + col), colour_with_alpha, self.settings)
 
         if self.settings["debug"]:
-            bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * self.piece_data.shape[0]
-            start_pos = cell_to_world_coords(self.position, self.settings)
+            bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * piece_data.shape[0]
+            start_pos = cell_to_world_coords(position, self.settings)
             pg.draw.rect(surface, (0, 255, 0), (start_pos, (bounding_box_size, bounding_box_size)), 2)
 
-            draw_grid(surface, start_pos[0], start_pos[1], self.piece_data.shape[0], self.piece_data.shape[0], colours["debug_green"], self.settings)
+            draw_grid(surface, start_pos[0], start_pos[1], piece_data.shape[0], piece_data.shape[0], colours["debug_green"], self.settings)
+
+    def draw_ghost(self, board, surface: pg.Surface):
+        tetronimo_copy = copy.deepcopy(self)
+        while tetronimo_copy.try_drop(board):
+            continue
+
+        self.draw_piece(surface, tetronimo_copy.piece_data, tetronimo_copy.position, 80)
+        return

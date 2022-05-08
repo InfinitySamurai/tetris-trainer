@@ -5,18 +5,18 @@ from data.settings import colours
 
 
 def draw_sqaure_at_grid(surface, cell_pos: Tuple[int, int], colour, settings):
-    start_x = settings["board_x_pos"] + cell_pos[1] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
-    start_y = settings["board_y_pos"] + cell_pos[0] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"]
-    start_position = (start_x, start_y)
+    start_position = cell_to_world_coords(cell_pos, settings)
+    square = pg.Rect(start_position, (settings["cell_size"], settings["cell_size"]))
+
+    shape_surface = pg.Surface(square.size, pg.SRCALPHA)
 
     pg.draw.rect(
-        surface,
-        colour,
-        (
-            start_position,
-            (settings["cell_size"], settings["cell_size"])
-        ),
+        shape_surface,
+        pg.Color(colour),
+        shape_surface.get_rect()
     )
+
+    surface.blit(shape_surface, square)
 
 def draw_grid(surface, posx: float, posy: float, num_rows: int, num_cols: int, grid_colour, settings):
     cell_separation = settings["cell_size"] + settings["grid_thickness"]
@@ -34,7 +34,7 @@ def draw_grid(surface, posx: float, posy: float, num_rows: int, num_cols: int, g
         pg.draw.line(surface, grid_colour, start_pos, end_pos, settings["grid_thickness"])
 
 def cell_to_world_coords(cell: Tuple[int, int], settings, offset=(0,0)):
-    x = settings["board_x_pos"] + cell[1] * (settings["cell_size"] + settings["grid_thickness"]) + offset[0]
-    y = settings["board_y_pos"] + cell[0] * (settings["cell_size"] + settings["grid_thickness"]) + offset[1]
+    x = settings["board_x_pos"] + cell[1] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"] + offset[0]
+    y = settings["board_y_pos"] + cell[0] * (settings["cell_size"] + settings["grid_thickness"]) + settings["grid_thickness"] + offset[1]
 
     return (x, y)

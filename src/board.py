@@ -7,7 +7,6 @@ from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
 from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
 from input import Inputs
-from tetronimo import Tetronimo
 
 class Board:
     def __init__(self, settings):
@@ -80,7 +79,7 @@ class Board:
     def draw(self, surface):
         self.draw_static(surface)
         self.draw_board_state(surface)
-        self.current_tetronimo.draw(surface)
+        self.current_tetronimo.draw(self, surface)
 
     def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
