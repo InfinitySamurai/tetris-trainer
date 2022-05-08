@@ -11,13 +11,16 @@ class Tetronimo():
     def __init__(self, piece_type: tetronimoData.Tetronimoes, settings):
         self.piece = piece_type
         self.piece_data = tetronimoData.tetronimo_shapes[piece_type]
-        self.position = (0, 0)
+        self.position = (0, 3)
         self.settings = settings
         self.ticks_since_last_drop = 0
         self.failed_drop = False
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
         self.current_rotation: tetronimoData.Rotation = tetronimoData.Rotation.START
+
+        if self.piece == tetronimoData.Tetronimoes.O:
+            self.position = (self.position[0], self.position[1] + 1)
 
     def try_move(self, board, direction):
         next_position = (self.position[0], self.position[1] + direction)

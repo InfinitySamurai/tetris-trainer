@@ -19,6 +19,8 @@ gameSettings: Dict[str, float] = {
     "grid_thickness": 3,
     "preview_gap_from_main_grid": 20,
     "preview_count": 5,
+    "held_piece_x_pos": 100,
+    "held_piece_y_pos": 200,
     "frames_per_second": 60,
     "start_gravity": 0.05,
     "lock_ticks": 120,

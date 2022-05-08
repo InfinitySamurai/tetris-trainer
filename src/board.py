@@ -20,7 +20,7 @@ class Board:
         self.board_state = np.zeros([settings["num_rows"], settings["num_cols"]], np.int8)
 
         self.current_tetronimo: Tetronimo = self.bagManager.fetch_piece()
-        self.held_tetronimo: Tetronimoes | None = None
+        self.held_tetronimo: Tetronimo | None = None
         self.has_swapped_tetronimo = False
 
     def lock_piece(self):
@@ -74,13 +74,13 @@ class Board:
                 return
             
             if self.held_tetronimo is None:
-                self.held_tetronimo = self.current_tetronimo.piece
+                self.held_tetronimo = self.current_tetronimo
                 self.current_tetronimo = self.bagManager.fetch_piece()
                 return
             
-            temp_tetronimo_type = self.held_tetronimo
-            self.held_tetronimo = self.current_tetronimo.piece
-            self.current_tetronimo = Tetronimo(temp_tetronimo_type, self.settings)
+            temp_tetronimo = self.held_tetronimo
+            self.held_tetronimo = self.current_tetronimo
+            self.current_tetronimo = Tetronimo(temp_tetronimo.piece, self.settings)
 
         if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"], self.settings["lock_max_rotations"]):
             self.lock_piece()
@@ -90,15 +90,19 @@ class Board:
     def draw(self, surface):
         self.draw_static(surface)
         self.draw_board_state(surface)
+        self.draw_held_piece(surface)
         self.current_tetronimo.draw(self, surface)
         self.preview.draw(surface, self.bagManager.peek_next_pieces(self.settings["preview_count"]))
+
+    def draw_held_piece(self, surface):
+        help_tetronimo = self.held_tetronimo
+        if help_tetronimo is not None:
+            help_tetronimo.draw_piece(surface, (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]), help_tetronimo.piece_data, (0 ,0))
 
     def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
             for col in range(self.settings["num_cols"]):
                 cell_state = self.board_state[row][col]
-
-
 
                 if cell_state == 0:
                     continue
@@ -121,7 +125,3 @@ class Board:
 
         # Main game area
         draw_grid(surface, board_x_pos, board_y_pos, self.settings["num_rows"], self.settings["num_cols"], colours["grid"], self.settings )
-
-    def draw_preview(self, surface):
-
-        return
