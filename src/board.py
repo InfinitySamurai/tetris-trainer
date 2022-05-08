@@ -116,8 +116,8 @@ class Board:
 
     def draw_held_piece(self, surface):
         held_bounding_box_start_pos = (
-            self.settings["held_piece_x_pos"] - self.settings["held_piece_box_offset"],
-            self.settings["held_piece_y_pos"] - self.settings["held_piece_box_offset"],
+            self.settings["held_piece_position"][0] - self.settings["held_piece_box_offset"],
+            self.settings["held_piece_position"][1] - self.settings["held_piece_box_offset"],
         )
         pg.draw.rect(
             surface, (255, 255, 255), (held_bounding_box_start_pos, (200, 200)), 2
@@ -128,7 +128,7 @@ class Board:
             x_offset = self.settings["cell_size"] / 2 if held_tetronimo.piece == Tetronimoes.O else 0
             held_tetronimo.draw_piece(
                 surface,
-                (self.settings["held_piece_x_pos"] + x_offset, self.settings["held_piece_y_pos"]),
+                (self.settings["held_piece_position"][0] + x_offset, self.settings["held_piece_position"][1]),
                 held_tetronimo.piece_data,
                 (0, 0),
             )
