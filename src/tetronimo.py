@@ -8,7 +8,7 @@ from data.settings import colours
 from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
 
 class Tetronimo():
-    def __init__(self, board, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
+    def __init__(self, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
         self.piece = piece_type
         self.piece_data = tetronimoData.tetronimo_shapes[piece_type]
         self.position = position
@@ -17,27 +17,26 @@ class Tetronimo():
         self.failed_drop = False
         self.lock_tick_counter = 0
         self.rotations_since_failed_drop = 0
-        self.board = board
         self.current_rotation: tetronimoData.Rotation = tetronimoData.Rotation.START
 
-    def try_move(self, direction):
+    def try_move(self, board, direction):
         next_position = (self.position[0], self.position[1] + direction)
-        if not self.check_collision(next_position, self.piece_data):
+        if not self.check_collision(board, next_position, self.piece_data):
             self.position = next_position
             return True
         return False
     
     # rotations is how many time to rotate counter clockwise because that's how numpy does it
-    def try_rotate(self, rotations):
+    def try_rotate(self, board, rotations):
         next_piece_data = np.rot90(self.piece_data, rotations)
         next_rotation = tetronimoData.Rotation((self.current_rotation.value + rotations) % tetronimoData.possible_rotation_count)
         next_position = self.position
 
-        if self.check_collision(next_position, next_piece_data):
+        if self.check_collision(board, next_position, next_piece_data):
             kick_table = tetronimoData.kick_table_I if self.piece == tetronimoData.Tetronimoes.I else tetronimoData.kick_table
             for kick_data in kick_table[(self.current_rotation.value, next_rotation.value)]:
                 new_position_to_check = (next_position[0] - kick_data[1], next_position[1] + kick_data[0])
-                if not self.check_collision(new_position_to_check, next_piece_data):
+                if not self.check_collision(board, new_position_to_check, next_piece_data):
                     self.do_rotation(next_piece_data, next_rotation, new_position_to_check)
                     return True
             return False
@@ -55,9 +54,9 @@ class Tetronimo():
         if self.failed_drop:
             self.rotations_since_failed_drop += 1
 
-    def try_drop(self):
+    def try_drop(self, board):
         next_position = (self.position[0] + 1, self.position[1])
-        if self.check_collision(next_position, self.piece_data):
+        if self.check_collision(board, next_position, self.piece_data):
             self.failed_drop = True
             return False
 
@@ -67,7 +66,7 @@ class Tetronimo():
         self.rotations_since_failed_drop = 0
         return True
 
-    def check_collision(self, position: Tuple[int, int], piece_data):
+    def check_collision(self, board, position: Tuple[int, int], piece_data):
         for tetronimo_row in range(piece_data.shape[0]):
             for tetronimo_col in range(piece_data.shape[1]):
                 cell_state = piece_data[tetronimo_row, tetronimo_col]
@@ -83,7 +82,7 @@ class Tetronimo():
                 if board_col > self.settings["num_cols"] - 1 or board_col < 0:
                     return True
 
-                board_cell_state = self.board.board_state[board_row][board_col]
+                board_cell_state = board.board_state[board_row][board_col]
                 if board_cell_state > 0:
                     return True
 
@@ -94,13 +93,13 @@ class Tetronimo():
             return True
         return False
 
-    def update(self, gravity):
+    def update(self, board, gravity):
         self.ticks_since_last_drop += 1
         if self.failed_drop:
             self.lock_tick_counter += 1
         if self.ticks_since_last_drop * gravity >= 1:
             self.ticks_since_last_drop = 0
-            self.try_drop()
+            self.try_drop(board)
             
 
     def draw(self, surface):

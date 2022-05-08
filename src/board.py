@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import pygame as pg
+from bagManager import BagManager
 
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
@@ -9,7 +10,7 @@ from input import Inputs
 from tetronimo import Tetronimo
 
 class Board:
-    def __init__(self, game_settings):
+    def __init__(self, settings):
         self.width = 10
         self.height = 20
         self.preview_col_count = 4
@@ -17,12 +18,14 @@ class Board:
 
         self.font = pg.font.SysFont("comic sans", 14)
 
-        self.settings = game_settings
+        self.settings = settings
 
-        self.board_state = np.zeros([game_settings["num_rows"], game_settings["num_cols"]], np.int8)
-        self.preview_grid = np.zeros([self.preview_row_count * game_settings["preview_count"], self.preview_col_count], np.int8)
+        self.bagManager = BagManager(settings)
 
-        self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
+        self.board_state = np.zeros([settings["num_rows"], settings["num_cols"]], np.int8)
+        self.preview_grid = np.zeros([self.preview_row_count * settings["preview_count"], self.preview_col_count], np.int8)
+
+        self.current_tetronimo = self.bagManager.fetch_piece()
 
     def lock_piece(self):
         tetronimo = self.current_tetronimo
@@ -39,7 +42,7 @@ class Board:
                 self.board_state[board_row][board_col] = tetronimo.piece.value
 
         self.clear_complete_lines()
-        self.current_tetronimo = Tetronimo(self, random.choice(list(Tetronimoes)), (0, 0), self.settings)
+        self.current_tetronimo = self.bagManager.fetch_piece()
 
     def clear_complete_lines(self):
         for row_number, row_data in enumerate(self.board_state):
@@ -50,29 +53,29 @@ class Board:
 
     def update(self, input_map, gravity, player_settings):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
-            self.current_tetronimo.try_move(1)
+            self.current_tetronimo.try_move(self, 1)
         if input_map[Inputs.MOVE_RIGHT]["das_active"] and input_map[Inputs.MOVE_RIGHT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
-            self.current_tetronimo.try_move(1)
+            self.current_tetronimo.try_move(self, 1)
         if input_map[Inputs.MOVE_LEFT]["frames"] == 1:
-            self.current_tetronimo.try_move(-1)
+            self.current_tetronimo.try_move(self, -1)
         if  input_map[Inputs.MOVE_LEFT]["das_active"] and input_map[Inputs.MOVE_LEFT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
-            self.current_tetronimo.try_move(-1)
+            self.current_tetronimo.try_move(self, -1)
         if input_map[Inputs.ROTATE_CW]["frames"] == 1:
-            self.current_tetronimo.try_rotate(3)
+            self.current_tetronimo.try_rotate(self, 3)
         if input_map[Inputs.ROTATE_CCW]["frames"] == 1:
-            self.current_tetronimo.try_rotate(1)
+            self.current_tetronimo.try_rotate(self, 1)
         if input_map[Inputs.ROTATE_180]["frames"] == 1:
-            self.current_tetronimo.try_rotate(2)
+            self.current_tetronimo.try_rotate(self, 2)
 
         if input_map[Inputs.HARD_DROP]["frames"] == 1:
-            while self.current_tetronimo.try_drop():
+            while self.current_tetronimo.try_drop(self):
                 continue
             self.lock_piece()
 
         if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"], self.settings["lock_max_rotations"]):
             self.lock_piece()
 
-        self.current_tetronimo.update(gravity)
+        self.current_tetronimo.update(self, gravity)
 
     def draw(self, surface):
         self.draw_static(surface)
