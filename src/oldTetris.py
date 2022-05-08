@@ -1079,11 +1079,6 @@ can_hold = True
 
 time_list = []
 
-pg.mixer.music.load(os.path.join("assets", "tetris_theme_cello_qtet.mp3"))
-pg.mixer.music.play(-1)
-pg.mixer.music.set_volume(0.02)
-
-
 pg.event.set_allowed([pg.KEYDOWN])
 
 play_game = True

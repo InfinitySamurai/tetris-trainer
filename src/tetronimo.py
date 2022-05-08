@@ -8,10 +8,10 @@ from data.settings import colours
 from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
 
 class Tetronimo():
-    def __init__(self, piece_type: tetronimoData.Tetronimoes, position: Tuple[int, int], settings):
+    def __init__(self, piece_type: tetronimoData.Tetronimoes, settings):
         self.piece = piece_type
         self.piece_data = tetronimoData.tetronimo_shapes[piece_type]
-        self.position = position
+        self.position = (0, 0)
         self.settings = settings
         self.ticks_since_last_drop = 0
         self.failed_drop = False
