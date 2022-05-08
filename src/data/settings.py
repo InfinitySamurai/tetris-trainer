@@ -6,11 +6,10 @@ gameSettings: Dict[str, Any] = {
     "debug": True,
     "screen_width": 1000,
     "screen_height": 800,
-    "board_y_pos": 50,
     "board_width": 300,
     "board_height": 700,
-    "num_cols": 10,
-    "num_rows": 22,
+    # rows and columns
+    "board_dimensions": (22, 10),
     "cell_size": 30,
     "grid_thickness": 3,
     "preview_gap_from_main_grid": 20,
@@ -34,15 +33,18 @@ player_settings = {
 
 def get_game_settings():
     settings = gameSettings.copy()
-    settings["board_x_pos"] = (
-        gameSettings["screen_width"] / 2 - gameSettings["board_width"] / 2
+    settings["board_position"] = (
+        gameSettings["screen_width"] / 2 - gameSettings["board_width"] / 2,
+        50,
     )
     settings["board_width"] = (
         gameSettings["cell_size"] + gameSettings["grid_thickness"]
-    ) * gameSettings["num_cols"]
-    settings["preview_x_pos"] = (
-        settings["board_x_pos"]
+    ) * gameSettings["board_dimensions"][1]
+    settings["preview_position"] = (
+        settings["board_position"][0]
         + settings["board_width"]
-        + settings["preview_gap_from_main_grid"]
+        + settings["preview_gap_from_main_grid"],
+        settings["board_position"][1],
     )
+
     return settings

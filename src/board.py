@@ -19,7 +19,7 @@ class Board:
         self.preview = Preview(settings)
 
         self.board_state = np.zeros(
-            [settings["num_rows"], settings["num_cols"]], np.int8
+            settings["board_dimensions"], np.int8
         )
 
         self.current_tetronimo: Tetronimo = self.bagManager.fetch_piece()
@@ -46,7 +46,7 @@ class Board:
 
     def clear_complete_lines(self):
         for row_number, row_data in enumerate(self.board_state):
-            if np.count_nonzero(row_data) == self.settings["num_cols"]:
+            if np.count_nonzero(row_data) == self.settings["board_dimensions"][1]:
                 self.board_state = np.delete(self.board_state, row_number, 0)
                 self.board_state = np.insert(
                     self.board_state, 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0
@@ -134,8 +134,9 @@ class Board:
             )
 
     def draw_board_state(self, surface: pg.Surface):
-        for row in range(self.settings["num_rows"]):
-            for col in range(self.settings["num_cols"]):
+        rows, columns = self.settings["board_dimensions"]
+        for row in range(rows):
+            for col in range(columns):
                 cell_state = self.board_state[row][col]
 
                 if cell_state == 0:
@@ -144,19 +145,20 @@ class Board:
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
                 draw_square_at_grid(
                     surface,
-                    (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+                    self.settings["board_position"],
                     (row, col),
                     colour,
                     self.settings,
                 )
 
         if self.settings["debug"]:
-            for row in range(self.settings["num_rows"]):
-                for col in range(self.settings["num_cols"]):
+            rows, columns = self.settings["board_dimensions"]
+            for row in range(rows):
+                for col in range(columns):
                     cell_state = self.board_state[row][col]
                     arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
                     pos = cell_to_world_coords(
-                        (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+                        self.settings["board_position"],
                         (row, col),
                         self.settings,
                         (3, 3),
@@ -164,15 +166,11 @@ class Board:
                     surface.blit(arr_text, pos)
 
     def draw_static(self, surface):
-        board_x_pos = self.settings["board_x_pos"]
-        board_y_pos = self.settings["board_y_pos"]
-
         # Main game area
         draw_grid(
             surface,
-            (self.settings["board_x_pos"], self.settings["board_y_pos"]),
-            self.settings["num_rows"],
-            self.settings["num_cols"],
+            self.settings["board_position"],
+            self.settings["board_dimensions"],
             colours["grid"],
             self.settings,
         )

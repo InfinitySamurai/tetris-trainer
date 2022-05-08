@@ -24,12 +24,12 @@ def draw_square_at_grid(
 def draw_grid(
     surface,
     position: Tuple[float, float],
-    num_rows: int,
-    num_cols: int,
+    board_dimensions: Tuple[int, int],
     grid_colour,
     settings,
 ):
     cell_separation = settings["cell_size"] + settings["grid_thickness"]
+    num_rows, num_cols = board_dimensions
 
     for i in range(num_cols + 1):
         start_x = position[0] + i * cell_separation

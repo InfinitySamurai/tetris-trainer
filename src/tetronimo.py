@@ -97,9 +97,9 @@ class Tetronimo:
                 board_row = position[0] + tetronimo_row
                 board_col = position[1] + tetronimo_col
 
-                if board_row > self.settings["num_rows"] - 1:
+                if board_row > self.settings["board_dimensions"][0] - 1:
                     return True
-                if board_col > self.settings["num_cols"] - 1 or board_col < 0:
+                if board_col > self.settings["board_dimensions"][1] - 1 or board_col < 0:
                     return True
 
                 board_cell_state = board.board_state[board_row][board_col]
@@ -127,7 +127,7 @@ class Tetronimo:
     def draw(self, board, surface):
         self.draw_piece(
             surface,
-            (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+            self.settings["board_position"],
             self.piece_data,
             self.position,
         )
@@ -173,8 +173,7 @@ class Tetronimo:
             draw_grid(
                 surface,
                 start_pos,
-                piece_data.shape[0],
-                piece_data.shape[0],
+                piece_data.shape,
                 colours["debug_green"],
                 self.settings,
             )
@@ -186,7 +185,7 @@ class Tetronimo:
 
         self.draw_piece(
             surface,
-            (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+            self.settings["board_position"],
             tetronimo_copy.piece_data,
             tetronimo_copy.position,
             80,

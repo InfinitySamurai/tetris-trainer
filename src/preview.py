@@ -24,9 +24,8 @@ class Preview:
     def draw(self, surface, pieces: list[Tetronimo]):
         draw_grid(
             surface,
-            (self.settings["preview_x_pos"], self.settings["board_y_pos"]),
-            self.preview_row_count * self.settings["preview_count"],
-            self.preview_col_count,
+            self.settings["preview_position"],
+            (self.preview_row_count * self.settings["preview_count"], self.preview_col_count),
             colours["grid"],
             self.settings,
         )
@@ -34,7 +33,7 @@ class Preview:
         for index, piece in enumerate(pieces):
             piece.draw_piece(
                 surface,
-                (self.settings["preview_x_pos"], self.settings["board_y_pos"]),
+                self.settings["preview_position"],
                 piece.piece_data,
                 (3 * index, 0),
             )
