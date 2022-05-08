@@ -1,4 +1,3 @@
-import random
 from bag import Bag
 
 from data.tetronimoData import Tetronimoes
@@ -9,7 +8,7 @@ class BagManager():
     def __init__(self, settings):
         self.settings = settings
         self.current_bag = Bag(settings)
-        self.future_bags = [Bag(settings)]
+        self.future_bags = [Bag(settings), Bag(settings)]
         return
     
     def fetch_piece(self):
@@ -17,5 +16,7 @@ class BagManager():
 
         if len(self.current_bag.contents) == 0:
             self.current_bag = self.future_bags.pop(0)
+            self.future_bags.append(Bag(self.settings))
+        
 
         return next_piece
