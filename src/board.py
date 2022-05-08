@@ -5,6 +5,7 @@ from bagManager import BagManager
 
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
+from tetronimo import Tetronimo
 from drawUtils import cell_to_world_coords, draw_grid, draw_square_at_grid
 from input import Inputs
 from preview import Preview
@@ -18,7 +19,9 @@ class Board:
 
         self.board_state = np.zeros([settings["num_rows"], settings["num_cols"]], np.int8)
 
-        self.current_tetronimo = self.bagManager.fetch_piece()
+        self.current_tetronimo: Tetronimo = self.bagManager.fetch_piece()
+        self.held_tetronimo: Tetronimoes | None = None
+        self.has_swapped_tetronimo = False
 
     def lock_piece(self):
         tetronimo = self.current_tetronimo
@@ -36,6 +39,7 @@ class Board:
 
         self.clear_complete_lines()
         self.current_tetronimo = self.bagManager.fetch_piece()
+        self.has_swapped_tetronimo = False
 
     def clear_complete_lines(self):
         for row_number, row_data in enumerate(self.board_state):
@@ -64,6 +68,19 @@ class Board:
             while self.current_tetronimo.try_drop(self):
                 continue
             self.lock_piece()
+
+        if input_map[Inputs.HOLD]["frames"] == 1:
+            if self.has_swapped_tetronimo:
+                return
+            
+            if self.held_tetronimo is None:
+                self.held_tetronimo = self.current_tetronimo.piece
+                self.current_tetronimo = self.bagManager.fetch_piece()
+                return
+            
+            temp_tetronimo_type = self.held_tetronimo
+            self.held_tetronimo = self.current_tetronimo.piece
+            self.current_tetronimo = Tetronimo(temp_tetronimo_type, self.settings)
 
         if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"], self.settings["lock_max_rotations"]):
             self.lock_piece()
