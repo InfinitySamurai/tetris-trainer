@@ -33,8 +33,8 @@ def draw_grid(surface, posx: float, posy: float, num_rows: int, num_cols: int, g
         end_pos = (posx + num_cols * cell_separation, start_y)
         pg.draw.line(surface, grid_colour, start_pos, end_pos, settings["grid_thickness"])
 
-def cell_to_world_coords(cell: Tuple[int, int], settings):
-    x = settings["board_x_pos"] + cell[1] * (settings["cell_size"] + settings["grid_thickness"])
-    y = settings["board_y_pos"] + cell[0] * (settings["cell_size"] + settings["grid_thickness"])
+def cell_to_world_coords(cell: Tuple[int, int], settings, offset=(0,0)):
+    x = settings["board_x_pos"] + cell[1] * (settings["cell_size"] + settings["grid_thickness"]) + offset[0]
+    y = settings["board_y_pos"] + cell[0] * (settings["cell_size"] + settings["grid_thickness"]) + offset[1]
 
     return (x, y)

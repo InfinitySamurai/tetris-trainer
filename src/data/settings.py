@@ -7,7 +7,7 @@ colours = {
 }
 
 gameSettings: Dict[str, float] = {
-    "debug": True,
+    "debug": False,
     "screen_width": 1000,
     "screen_height": 800,
     "board_y_pos": 50,

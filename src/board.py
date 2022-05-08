@@ -44,18 +44,9 @@ class Board:
     def clear_complete_lines(self):
         for row_number, row_data in enumerate(self.board_state):
             if np.count_nonzero(row_data) == self.settings["num_cols"]:
-                np.delete(self.board_state, 1, 0)
-                self.board_state[row_number] = [0,0,0,0,0,0,0,0,0,0]
-        # tetronimo_size = tetronimo.piece_data.shape[0]
-        # tetronimo_position = tetronimo.position
-        # for i in range(tetronimo_size):
-        #     row_number = tetronimo_position[1] + i
-        #     row_data = self.board_state[row_number]
+                self.board_state = np.delete(self.board_state, row_number, 0)
+                self.board_state = np.insert(self.board_state, 0, [0,0,0,0,0,0,0,0,0,0], 0)
 
-        #     if np.count_nonzero(row_data) == self.settings["num_cols"]:
-        #         self.board_state[row_number] = [0,0,0,0,0,0,0,0,0,0]
-        #         return
-        # return
 
     def update(self, input_map, gravity, player_settings):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
@@ -93,10 +84,7 @@ class Board:
             for col in range(self.settings["num_cols"]):
                 cell_state = self.board_state[row][col]
 
-                if self.settings["debug"]:
-                    arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
-                    pos = cell_to_world_coords((row, col), self.settings)
-                    surface.blit(arr_text, pos)
+
 
                 if cell_state == 0:
                     continue
@@ -104,8 +92,13 @@ class Board:
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
                 draw_sqaure_at_grid(surface, (row, col), colour, self.settings)
 
-
-
+        if self.settings["debug"]:
+            for row in range(self.settings["num_rows"]):
+                for col in range(self.settings["num_cols"]):
+                    cell_state = self.board_state[row][col]
+                    arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
+                    pos = cell_to_world_coords((row, col), self.settings, (3,3))
+                    surface.blit(arr_text, pos)
 
     
     def draw_static(self, surface):
