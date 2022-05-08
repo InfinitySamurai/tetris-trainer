@@ -5,24 +5,18 @@ from bagManager import BagManager
 
 from data.settings import colours
 from data.tetronimoData import tetronimo_colours, Tetronimoes
-from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
+from drawUtils import cell_to_world_coords, draw_grid, draw_square_at_grid
 from input import Inputs
+from preview import Preview
 
 class Board:
     def __init__(self, settings):
-        self.width = 10
-        self.height = 20
-        self.preview_col_count = 4
-        self.preview_row_count = 3
-
         self.font = pg.font.SysFont("comic sans", 14)
-
         self.settings = settings
-
         self.bagManager = BagManager(settings)
+        self.preview = Preview(settings)
 
         self.board_state = np.zeros([settings["num_rows"], settings["num_cols"]], np.int8)
-        self.preview_grid = np.zeros([self.preview_row_count * settings["preview_count"], self.preview_col_count], np.int8)
 
         self.current_tetronimo = self.bagManager.fetch_piece()
 
@@ -80,6 +74,7 @@ class Board:
         self.draw_static(surface)
         self.draw_board_state(surface)
         self.current_tetronimo.draw(self, surface)
+        self.preview.draw(surface, self.bagManager.peek_next_pieces(self.settings["preview_count"]))
 
     def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
@@ -92,29 +87,24 @@ class Board:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
-                draw_sqaure_at_grid(surface, (row, col), colour, self.settings)
+                draw_square_at_grid(surface, (self.settings["board_x_pos"], self.settings["board_y_pos"]), (row, col), colour, self.settings)
 
         if self.settings["debug"]:
             for row in range(self.settings["num_rows"]):
                 for col in range(self.settings["num_cols"]):
                     cell_state = self.board_state[row][col]
                     arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
-                    pos = cell_to_world_coords((row, col), self.settings, (3,3))
+                    pos = cell_to_world_coords((self.settings["board_x_pos"], self.settings["board_y_pos"]), (row, col), self.settings, (3,3))
                     surface.blit(arr_text, pos)
 
     
     def draw_static(self, surface):
         board_x_pos = self.settings["board_x_pos"]
         board_y_pos = self.settings["board_y_pos"]
-        cell_size = self.settings["cell_size"]
-        grid_thickness = self.settings["grid_thickness"]
-        num_cols = self.settings["num_cols"]
 
         # Main game area
         draw_grid(surface, board_x_pos, board_y_pos, self.settings["num_rows"], self.settings["num_cols"], colours["grid"], self.settings )
-        grid_width = (cell_size + grid_thickness) * num_cols
 
-        # preview grid
-        preview_x = board_x_pos + grid_width + self.settings["preview_gap_from_main_grid"]
-        draw_grid(surface, preview_x, board_y_pos, self.preview_row_count * self.settings["preview_count"], self.preview_col_count, colours["grid"], self.settings )
+    def draw_preview(self, surface):
 
+        return

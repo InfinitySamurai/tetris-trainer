@@ -35,4 +35,6 @@ player_settings = {
 def get_game_settings():
     settings = gameSettings.copy()
     settings["board_x_pos"] = gameSettings["screen_width"] / 2 - gameSettings["board_width"] / 2
+    settings["board_width"] = (gameSettings["cell_size"] + gameSettings["grid_thickness"]) * gameSettings["num_cols"]
+    settings["preview_x"] = settings["board_x_pos"] + settings["board_width"] + settings["preview_gap_from_main_grid"]
     return settings

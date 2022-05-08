@@ -9,7 +9,7 @@ class Rotation(Enum):
     UPSIDEDOWN = 2
     CW = 3
 
-possible_rotation_count = 4
+possible_rotation_count = len(list(Rotation))
 
 class Tetronimoes(Enum):
     I = 1
@@ -52,10 +52,10 @@ kick_table_I: Kicktable = {
     (Rotation.CCW.value, Rotation.UPSIDEDOWN.value): [(-2,0),(1,0),(-2,-1),(1,2)],
     (Rotation.CCW.value, Rotation.START.value): [(1,0),(-2,0),(1,-2),(-2,1)],
     (Rotation.START.value, Rotation.CCW.value): [(-1,0),(2,0),(-1,2),(2,-1)],
-    # (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
-    # (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
-    # (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
-    # (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
+    (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
+    (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
+    (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
+    (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
 }
 
 kick_table: Kicktable = {
@@ -67,8 +67,8 @@ kick_table: Kicktable = {
     (Rotation.CCW.value, Rotation.UPSIDEDOWN.value): [(-1,0),(-1,-1),(0,2),(-1,2)],
     (Rotation.CCW.value, Rotation.START.value): [(-1,0),(-1,-1),(0,2),(-1,2)],
     (Rotation.START.value, Rotation.CCW.value): [(1,0),(1,1),(0,-2),(1,-2)],
-    # (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
-    # (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
-    # (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
-    # (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
+    (Rotation.START.value, Rotation.UPSIDEDOWN.value): [(0,1),(1,1),(-1,1),(1,0),(-1,0)],
+    (Rotation.UPSIDEDOWN.value, Rotation.START.value): [(0,-1),(-1,-1),(1,-1),(-1,0),(1,0)],
+    (Rotation.CW.value, Rotation.CCW.value): [(1,0),(1,2),(1,1),(0,2),(0,1)],
+    (Rotation.CCW.value, Rotation.CW.value): [(-1,0),(-1,2),(-1,1),(0,2),(0,1)]
 }

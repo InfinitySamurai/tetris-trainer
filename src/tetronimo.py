@@ -5,7 +5,7 @@ import pygame as pg
 
 import data.tetronimoData as tetronimoData
 from data.settings import colours
-from drawUtils import cell_to_world_coords, draw_grid, draw_sqaure_at_grid
+from drawUtils import cell_to_world_coords, draw_grid, draw_square_at_grid
 
 class Tetronimo():
     def __init__(self, piece_type: tetronimoData.Tetronimoes, settings):
@@ -103,10 +103,10 @@ class Tetronimo():
             
 
     def draw(self, board, surface):
-        self.draw_piece(surface, self.piece_data, self.position)
+        self.draw_piece(surface, (self.settings["board_x_pos"], self.settings["board_y_pos"]), self.piece_data, self.position)
         self.draw_ghost(board, surface)
 
-    def draw_piece(self, surface, piece_data, position, alpha = 255):
+    def draw_piece(self, surface, board_pos, piece_data, position, alpha = 255):
         for row in range(piece_data.shape[0]):
             for col in range(piece_data.shape[1]):
                 cell_state = piece_data[row][col]
@@ -117,11 +117,11 @@ class Tetronimo():
                 colour = tetronimoData.tetronimo_colours[tetronimoData.Tetronimoes(cell_state)]
                 colour_with_alpha = (*colour, alpha)
 
-                draw_sqaure_at_grid(surface, (position[0] + row, position[1] + col), colour_with_alpha, self.settings)
+                draw_square_at_grid(surface, board_pos, (position[0] + row, position[1] + col), colour_with_alpha, self.settings)
 
         if self.settings["debug"]:
             bounding_box_size = (self.settings["cell_size"] + self.settings["grid_thickness"]) * piece_data.shape[0]
-            start_pos = cell_to_world_coords(position, self.settings)
+            start_pos = cell_to_world_coords((self.settings["board_x_pos"], self.settings["board_y_pos"]), position, self.settings)
             pg.draw.rect(surface, (0, 255, 0), (start_pos, (bounding_box_size, bounding_box_size)), 2)
 
             draw_grid(surface, start_pos[0], start_pos[1], piece_data.shape[0], piece_data.shape[0], colours["debug_green"], self.settings)
@@ -131,5 +131,5 @@ class Tetronimo():
         while tetronimo_copy.try_drop(board):
             continue
 
-        self.draw_piece(surface, tetronimo_copy.piece_data, tetronimo_copy.position, 80)
+        self.draw_piece(surface, (self.settings["board_x_pos"], self.settings["board_y_pos"]), tetronimo_copy.piece_data, tetronimo_copy.position, 80)
         return

@@ -20,3 +20,13 @@ class BagManager():
         
 
         return next_piece
+
+    def peek_next_pieces(self, count: int):
+        pieces_in_current_bag = len(self.current_bag.contents)
+        current_bag_contents = self.current_bag.contents
+        if pieces_in_current_bag > count:
+            return current_bag_contents[:count]
+        
+        overflow_bag_contents = self.future_bags[0].contents
+        overflow_pieces = count - pieces_in_current_bag
+        return current_bag_contents.copy() + overflow_bag_contents[:overflow_pieces]
