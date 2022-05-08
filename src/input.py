@@ -1,6 +1,7 @@
 import pygame as pg
 from enum import Enum, auto
 
+
 class Inputs(Enum):
     EXIT = auto()
     RESTART = auto()
@@ -13,6 +14,7 @@ class Inputs(Enum):
     SOFT_DROP = auto()
     HARD_DROP = auto()
 
+
 key_to_action_map = {
     pg.K_ESCAPE: Inputs.EXIT,
     pg.K_r: Inputs.RESTART,
@@ -24,12 +26,13 @@ key_to_action_map = {
     pg.K_z: Inputs.ROTATE_CCW,
     pg.K_a: Inputs.ROTATE_180,
     pg.K_SPACE: Inputs.HARD_DROP,
-    pg.K_DOWN: Inputs.SOFT_DROP
+    pg.K_DOWN: Inputs.SOFT_DROP,
 }
 
 repeated_actions = [Inputs.MOVE_LEFT, Inputs.MOVE_RIGHT]
 
-class InputController():
+
+class InputController:
     def __init__(self, player_settings):
         # disable key repeats
         pg.key.set_repeat()
@@ -56,7 +59,7 @@ class InputController():
             if event.key in key_to_action_map:
                 mapped_action = key_to_action_map[event.key]
                 self.action_map[mapped_action]["held"] = True
-        
+
         for event in keyup_events:
             if event.key in key_to_action_map:
                 mapped_action = key_to_action_map[event.key]
@@ -70,9 +73,12 @@ class InputController():
 
     def update(self):
         for key in self.action_map:
-            if self.action_map[key]['held']:
-                self.action_map[key]['frames'] += 1
+            if self.action_map[key]["held"]:
+                self.action_map[key]["frames"] += 1
 
                 if key in repeated_actions:
-                    if self.action_map[key]["frames"] > self.player_settings["delayed_auto_shift"]:
+                    if (
+                        self.action_map[key]["frames"]
+                        > self.player_settings["delayed_auto_shift"]
+                    ):
                         self.action_map[key]["das_active"] = True

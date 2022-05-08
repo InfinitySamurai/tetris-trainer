@@ -1,4 +1,3 @@
-
 import game
 import os
 import pygame as pg

@@ -71,6 +71,7 @@ piece_dict = {
 
 perms = set(permutations([1, 2, 3, 4, 5, 6, 7]))
 
+
 def Generate_Bag_Constrained(perms, constraints):
     bags_list = []
     result = []
@@ -243,7 +244,7 @@ def spawn_previews():
     for i in range(num_previews):
         piece_array = np.flip(piece_dict[bag[i]], 0)
         preview_grid[
-            pos: pos + (np.shape(piece_array)[0]), 0: np.shape(piece_array)[1]
+            pos : pos + (np.shape(piece_array)[0]), 0 : np.shape(piece_array)[1]
         ] = piece_array
         if bag[i] == 6:
             pos += 1
@@ -870,8 +871,8 @@ def line_clear(board_state):
 
         if all(el > 0 for el in board_state[counter, :]):
             cleared_lines += 1
-            board_state[counter: board_shape[0] - 1, :] = board_state[
-                counter + 1: board_shape[0], :
+            board_state[counter : board_shape[0] - 1, :] = board_state[
+                counter + 1 : board_shape[0], :
             ]
             board_state[board_shape[0] - 1, :] = np.zeros([1, board_shape[1]])
             counter = -1

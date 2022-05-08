@@ -10,6 +10,7 @@ from drawUtils import cell_to_world_coords, draw_grid, draw_square_at_grid
 from input import Inputs
 from preview import Preview
 
+
 class Board:
     def __init__(self, settings):
         self.font = pg.font.SysFont("comic sans", 14)
@@ -17,7 +18,9 @@ class Board:
         self.bagManager = BagManager(settings)
         self.preview = Preview(settings)
 
-        self.board_state = np.zeros([settings["num_rows"], settings["num_cols"]], np.int8)
+        self.board_state = np.zeros(
+            [settings["num_rows"], settings["num_cols"]], np.int8
+        )
 
         self.current_tetronimo: Tetronimo = self.bagManager.fetch_piece()
         self.held_tetronimo: Tetronimo | None = None
@@ -30,10 +33,10 @@ class Board:
                 cell_state = tetronimo.piece_data[tetronimo_row, tetronimo_col]
 
                 if cell_state == 0:
-                    continue 
-                
+                    continue
+
                 board_row = tetronimo.position[0] + tetronimo_row
-                board_col = tetronimo.position[1] + tetronimo_col 
+                board_col = tetronimo.position[1] + tetronimo_col
 
                 self.board_state[board_row][board_col] = tetronimo.piece.value
 
@@ -45,17 +48,28 @@ class Board:
         for row_number, row_data in enumerate(self.board_state):
             if np.count_nonzero(row_data) == self.settings["num_cols"]:
                 self.board_state = np.delete(self.board_state, row_number, 0)
-                self.board_state = np.insert(self.board_state, 0, [0,0,0,0,0,0,0,0,0,0], 0)
-
+                self.board_state = np.insert(
+                    self.board_state, 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0
+                )
 
     def update(self, input_map, gravity, player_settings):
         if input_map[Inputs.MOVE_RIGHT]["frames"] == 1:
             self.current_tetronimo.try_move(self, 1)
-        if input_map[Inputs.MOVE_RIGHT]["das_active"] and input_map[Inputs.MOVE_RIGHT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
+        if (
+            input_map[Inputs.MOVE_RIGHT]["das_active"]
+            and input_map[Inputs.MOVE_RIGHT]["frames"]
+            % player_settings["automatic_repeat_rate"]
+            == 0
+        ):
             self.current_tetronimo.try_move(self, 1)
         if input_map[Inputs.MOVE_LEFT]["frames"] == 1:
             self.current_tetronimo.try_move(self, -1)
-        if  input_map[Inputs.MOVE_LEFT]["das_active"] and input_map[Inputs.MOVE_LEFT]["frames"] % player_settings["automatic_repeat_rate"] == 0:
+        if (
+            input_map[Inputs.MOVE_LEFT]["das_active"]
+            and input_map[Inputs.MOVE_LEFT]["frames"]
+            % player_settings["automatic_repeat_rate"]
+            == 0
+        ):
             self.current_tetronimo.try_move(self, -1)
         if input_map[Inputs.ROTATE_CW]["frames"] == 1:
             self.current_tetronimo.try_rotate(self, 3)
@@ -72,19 +86,21 @@ class Board:
         if input_map[Inputs.HOLD]["frames"] == 1:
             if self.has_swapped_tetronimo:
                 return
-            
+
             self.has_swapped_tetronimo = True
 
             if self.held_tetronimo is None:
                 self.held_tetronimo = self.current_tetronimo
                 self.current_tetronimo = self.bagManager.fetch_piece()
                 return
-            
+
             temp_tetronimo = self.held_tetronimo
             self.held_tetronimo = self.current_tetronimo
             self.current_tetronimo = Tetronimo(temp_tetronimo.piece, self.settings)
 
-        if self.current_tetronimo.ready_to_lock(self.settings["lock_ticks"], self.settings["lock_max_rotations"]):
+        if self.current_tetronimo.ready_to_lock(
+            self.settings["lock_ticks"], self.settings["lock_max_rotations"]
+        ):
             self.lock_piece()
 
         self.current_tetronimo.update(self, gravity)
@@ -94,12 +110,27 @@ class Board:
         self.draw_board_state(surface)
         self.draw_held_piece(surface)
         self.current_tetronimo.draw(self, surface)
-        self.preview.draw(surface, self.bagManager.peek_next_pieces(self.settings["preview_count"]))
+        self.preview.draw(
+            surface, self.bagManager.peek_next_pieces(self.settings["preview_count"])
+        )
 
     def draw_held_piece(self, surface):
+        held_bounding_box_start_pos = (
+            self.settings["held_piece_x_pos"] - self.settings["held_piece_box_offset"],
+            self.settings["held_piece_y_pos"] - self.settings["held_piece_box_offset"],
+        )
+        pg.draw.rect(
+            surface, (255, 255, 255), (held_bounding_box_start_pos, (100, 100)), 2
+        )
+
         held_tetronimo = self.held_tetronimo
         if held_tetronimo is not None:
-            held_tetronimo.draw_piece(surface, (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]), held_tetronimo.piece_data, (0 ,0))
+            held_tetronimo.draw_piece(
+                surface,
+                (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]),
+                held_tetronimo.piece_data,
+                (0, 0),
+            )
 
     def draw_board_state(self, surface: pg.Surface):
         for row in range(self.settings["num_rows"]):
@@ -110,20 +141,38 @@ class Board:
                     continue
 
                 colour = tetronimo_colours[Tetronimoes(cell_state)]
-                draw_square_at_grid(surface, (self.settings["board_x_pos"], self.settings["board_y_pos"]), (row, col), colour, self.settings)
+                draw_square_at_grid(
+                    surface,
+                    (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+                    (row, col),
+                    colour,
+                    self.settings,
+                )
 
         if self.settings["debug"]:
             for row in range(self.settings["num_rows"]):
                 for col in range(self.settings["num_cols"]):
                     cell_state = self.board_state[row][col]
                     arr_text = self.font.render(str(cell_state), False, (255, 255, 255))
-                    pos = cell_to_world_coords((self.settings["board_x_pos"], self.settings["board_y_pos"]), (row, col), self.settings, (3,3))
+                    pos = cell_to_world_coords(
+                        (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+                        (row, col),
+                        self.settings,
+                        (3, 3),
+                    )
                     surface.blit(arr_text, pos)
 
-    
     def draw_static(self, surface):
         board_x_pos = self.settings["board_x_pos"]
         board_y_pos = self.settings["board_y_pos"]
 
         # Main game area
-        draw_grid(surface, board_x_pos, board_y_pos, self.settings["num_rows"], self.settings["num_cols"], colours["grid"], self.settings )
+        draw_grid(
+            surface,
+            board_x_pos,
+            board_y_pos,
+            self.settings["num_rows"],
+            self.settings["num_cols"],
+            colours["grid"],
+            self.settings,
+        )

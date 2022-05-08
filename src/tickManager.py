@@ -1,8 +1,7 @@
-
 import time
 
 
-class TickManager():
+class TickManager:
     def __init__(self, fps):
         self.paused = False
         self.fps = fps

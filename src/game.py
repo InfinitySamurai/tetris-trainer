@@ -3,6 +3,7 @@ import pygame as pg
 from board import Board
 from input import Inputs
 
+
 class Game:
     def __init__(self, game_settings):
         self.game_settings = game_settings
