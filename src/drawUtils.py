@@ -23,8 +23,7 @@ def draw_square_at_grid(
 
 def draw_grid(
     surface,
-    posx: float,
-    posy: float,
+    position: Tuple[float, float],
     num_rows: int,
     num_cols: int,
     grid_colour,
@@ -33,17 +32,17 @@ def draw_grid(
     cell_separation = settings["cell_size"] + settings["grid_thickness"]
 
     for i in range(num_cols + 1):
-        start_x = posx + i * cell_separation
-        start_pos = (start_x, posy)
-        end_pos = (start_x, posy + cell_separation * num_rows)
+        start_x = position[0] + i * cell_separation
+        start_pos = (start_x, position[1])
+        end_pos = (start_x, position[1] + cell_separation * num_rows)
         pg.draw.line(
             surface, grid_colour, start_pos, end_pos, settings["grid_thickness"]
         )
 
     for j in range(num_rows + 1):
-        start_y = posy + j * cell_separation
-        start_pos = (posx, start_y)
-        end_pos = (posx + num_cols * cell_separation, start_y)
+        start_y = position[1] + j * cell_separation
+        start_pos = (position[0], start_y)
+        end_pos = (position[0] + num_cols * cell_separation, start_y)
         pg.draw.line(
             surface, grid_colour, start_pos, end_pos, settings["grid_thickness"]
         )
@@ -51,7 +50,7 @@ def draw_grid(
 
 def cell_to_world_coords(
     board_coords: Tuple[int, int], cell: Tuple[int, int], settings, offset=(0, 0)
-):
+) -> Tuple[float, float]:
     x = (
         board_coords[0]
         + cell[1] * (settings["cell_size"] + settings["grid_thickness"])

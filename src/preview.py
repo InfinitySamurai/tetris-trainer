@@ -24,8 +24,7 @@ class Preview:
     def draw(self, surface, pieces: list[Tetronimo]):
         draw_grid(
             surface,
-            self.settings["preview_x_pos"],
-            self.settings["board_y_pos"],
+            (self.settings["preview_x_pos"], self.settings["board_y_pos"]),
             self.preview_row_count * self.settings["preview_count"],
             self.preview_col_count,
             colours["grid"],

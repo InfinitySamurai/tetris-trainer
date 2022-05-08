@@ -159,7 +159,7 @@ class Tetronimo:
                 self.settings["cell_size"] + self.settings["grid_thickness"]
             ) * piece_data.shape[0]
             start_pos = cell_to_world_coords(
-                (self.settings["board_x_pos"], self.settings["board_y_pos"]),
+                board_pos,
                 position,
                 self.settings,
             )
@@ -172,8 +172,7 @@ class Tetronimo:
 
             draw_grid(
                 surface,
-                start_pos[0],
-                start_pos[1],
+                start_pos,
                 piece_data.shape[0],
                 piece_data.shape[0],
                 colours["debug_green"],

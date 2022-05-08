@@ -1,9 +1,9 @@
-from typing import Dict
+from typing import Any, Dict
 
 colours = {"grid": (20, 20, 20), "background": (0, 0, 0), "debug_green": (0, 255, 0)}
 
-gameSettings: Dict[str, float] = {
-    "debug": False,
+gameSettings: Dict[str, Any] = {
+    "debug": True,
     "screen_width": 1000,
     "screen_height": 800,
     "board_y_pos": 50,

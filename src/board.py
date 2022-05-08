@@ -120,14 +120,15 @@ class Board:
             self.settings["held_piece_y_pos"] - self.settings["held_piece_box_offset"],
         )
         pg.draw.rect(
-            surface, (255, 255, 255), (held_bounding_box_start_pos, (100, 100)), 2
+            surface, (255, 255, 255), (held_bounding_box_start_pos, (200, 200)), 2
         )
 
         held_tetronimo = self.held_tetronimo
         if held_tetronimo is not None:
+            x_offset = self.settings["cell_size"] / 2 if held_tetronimo.piece == Tetronimoes.O else 0
             held_tetronimo.draw_piece(
                 surface,
-                (self.settings["held_piece_x_pos"], self.settings["held_piece_y_pos"]),
+                (self.settings["held_piece_x_pos"] + x_offset, self.settings["held_piece_y_pos"]),
                 held_tetronimo.piece_data,
                 (0, 0),
             )
@@ -169,8 +170,7 @@ class Board:
         # Main game area
         draw_grid(
             surface,
-            board_x_pos,
-            board_y_pos,
+            (self.settings["board_x_pos"], self.settings["board_y_pos"]),
             self.settings["num_rows"],
             self.settings["num_cols"],
             colours["grid"],
